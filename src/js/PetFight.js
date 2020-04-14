@@ -26,6 +26,10 @@ export class PetFight extends GameTemplate{
         ];
     }
 
+    static get NAME() {
+        return "PetFight";
+    }
+
 }
 
 
