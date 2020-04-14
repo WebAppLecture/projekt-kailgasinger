@@ -10,7 +10,7 @@ window.gameEngine = new GameEngine(
 let skinStyle = document.querySelector("#skin"),
     skins = ["gold","peach","basic","win95", "mech", "scifi"];
 
-window.skinChanger = new SkinChanger(skinStyle, skins, "../projekt-kailgasinger/src/css/");
+window.skinChanger = new SkinChanger(skinStyle, skins, "../src/css/");
 
 document.querySelector(".next").addEventListener("click", () => skinChanger.next());
 document.querySelector(".previous").addEventListener("click", () => skinChanger.previous());
