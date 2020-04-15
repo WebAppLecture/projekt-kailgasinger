@@ -12,7 +12,16 @@ import { Map } from "../../src/js/Map.js";
 //          2) Animation für Moves
 //          3) Energy für Moves & Ki
 //          4) Life, Exp, ...
+/*
+1) dazu miassade dein code seng, vermutlich wird da tick ned im gameLoop aafgruafa.
+2) jeder input call aus der Gameengine hat 2 parameter. Type der die art der eingabe zeigt, und active, ein boolean der bei keydown true und keyup false ist. 
+    Den kannst du überprüfen.
+3) Du kannst selber einfach eine Instanz von Menu erstellen, die auf das gleiche menu element im HTML verweist, und die mit eigenen Inhalten laden.
+4) Keine Ahnung warum das fehler wirft, aber so fängst du multihits nicht ab :wink: (siehe oben) 
+    Zwecks Rundenbasiertem system: Du musst deine Änderungen eventbasiert machen und nicht kontinuierlich in update(). 
+    Das sYstem braucht dann natürlich noch einen Stagemanager der die interaktionen in sinnvolle Wege leitet.
 
+*/
 
 
 export class PetFight extends GameTemplate {
@@ -26,23 +35,31 @@ export class PetFight extends GameTemplate {
             this.playermoves.active=0;
             let enemymoves = ["Clawstrike", "Tailhit", "Dodge", "Bite"];
             this.battle = new Battle(this.player, this.playermoves, enemy, enemymoves);
-            this.battle.fight();
-            this.cd = 10;
+        }
+        else {
+            this.map = new Map(500, 500, "testmap");
+            this.map.start();
         }
     }
 
     bindControls() {
-        if (this.mode == "battle" && this.cd >= 10) {
+        if (this.mode == "battle") {
             this.inputBinding = {  
-                "up": () => this.playermoves.active -= 2,
-                "right": () => this.playermoves.active += 1,
-                "left": () => this.playermoves.active -= 1,
-                "down": () => this.playermoves.active += 2,
-                "wheel": () => this.changeActiveItem(event.wheelDelta),
+                "up": (bool) => this.playermoves.active -= 2*bool,
+                "right": (bool) => this.playermoves.active += 1*bool,
+                "left": (bool) => this.playermoves.active -= 1*bool,
+                "down": (bool) => this.playermoves.active += 2*bool,
+                "wheel": (bool) => this.changeActiveItem(event.wheelDelta),
             };
         }
         else {
             //Keili
+            this.inputBinding = {
+                "left": () => this.map.player.x += -10,
+                "right": () => this.map.player.x += 10,
+                "up": () => this.map.player.y += -10,
+                "down": () => this.map.player.y += 10,
+            };
         }
     }
 
@@ -59,12 +76,33 @@ export class PetFight extends GameTemplate {
     }
 
     update() {
-        this.cd +=1;
+        if (this.mode == "map") {
+           if (this.map.update() == "startBattle") {
+                this.mode = "battle";
+               this.battlestart();              
+           }
+        }
+        else {
+        }
+    }
+
+    battlestart() {
+        this.player = {name: "Bla", life: 35, energy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
+        let enemy = {name: "Ene", life: 25, energy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
+        this.playermoves = ["Fireball", "Punch", "Heatshield", "Bite"];
+        this.playermoves.active=0;
+        let enemymoves = ["Clawstrike", "Tailhit", "Dodge", "Bite"];
+        this.battle = new Battle(this.player, this.playermoves, enemy, enemymoves);
+        this.battle.fight();
+        this.bindControls();
     }
 
     draw(ctx) {
         if (this.mode == "battle") {
             this.drawMoves(ctx);
+        }
+        else {
+            this.map.draw(ctx);
         }
     }
 
