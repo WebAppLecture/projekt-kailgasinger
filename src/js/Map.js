@@ -12,7 +12,7 @@ export class Map {
         this.size = 20; 
         this.maplengthx = 19;//*this.fieldlength;
         this.maplengthy = 24;//*this.fieldlength;
-        this.player = new Player(this.maplengthx/2, this.maplengthy/2, this.size, this.size, "#180b1d", 10);
+       
         this.colors = {mountain:"#180b1d", tree:"#02402f", fight:"#ba9714", water:"#db0303", swamp:""};
 
         
@@ -30,29 +30,27 @@ export class Map {
             }
         }
         this.entities[9][9].content = ( new MapObject("#000000", "fight", "Böser Hase"));
-    }
-
-    bindControls() {
-        
+        this.player = new Player(10, 12, this.size, this.size, "#180b1d", 10);
+        this.entities[10][12].content = this.player;
     }
 
     playerMove(di, dj) {
         let newPlayeri = this.player.i + di,
             newPlayerj = this.player.j + dj,
             targetField = this.entities[newPlayeri][newPlayerj].content;
-                    
+
         if(!targetField){
+            this.entities[this.player.i][this.player.j].content = undefined;
+            this.entities[newPlayeri][newPlayerj].content = this.player;
             this.player.move(di, dj);
-        }
-        if(targetField.type === "fight"){
+        } else if(targetField.type === "fight"){
             let mapUpdate = [];
             mapUpdate[0] = "startBattle";
-            mapUpdate[1] = this.entities[i][j].name;
+            mapUpdate[1] = this.entities[newPlayerj][newPlayerj].name;
             return mapUpdate;
-
         }
-
-    
+        
+        return false;
     }
     // drawTree(ctx, x, y) {        
     //     ctx.fillStyle = "#10C47D";
@@ -136,33 +134,37 @@ export class MapObject{
     }
     draw(ctx, i, j, size){
         ctx.fillStyle = this.color;
-        ctx.fillRect(i*size, j*size, size, size);
         ctx.shadowBlur = 10;
         ctx.shadowColor = this.color;
+        ctx.fillRect(i*size, j*size, size, size);
     }  
 
 }
 export class Tree extends MapObject{
     draw(ctx, i, j, size){
+        let x = i * size,
+            y = j * size;
         ctx.fillStyle = "#10C47D";
         ctx.beginPath();
-        ctx.moveTo(i+10, j);
-        ctx.lineTo(i+14, j+8);
-        ctx.lineTo(i+12, j+8);
-        ctx.lineTo(i+16, j+14);
-        ctx.lineTo(i+14, j+14);
-        ctx.lineTo(i+18, j+16);
-        ctx.lineTo(i+11, j+16);
-        ctx.lineTo(i+11, j+19);
-        ctx.lineTo(i+9, j+19);
-        ctx.lineTo(i+9, j+16);
-        ctx.lineTo(i+2, j+16);
-        ctx.lineTo(i+6, j+14);
-        ctx.lineTo(i+4, j+14);
-        ctx.lineTo(i+8, j+8);
-        ctx.lineTo(i+6, j+8);
-        ctx.lineTo(i+10, j);
-        ctx.closePath(200, 99);
+        ctx.moveTo(x+10, y);
+        ctx.lineTo(x+14, y+8);
+        ctx.lineTo(x+12, y+8);
+        ctx.lineTo(x+16, y+14);
+        ctx.lineTo(x+14, y+14);
+        ctx.lineTo(x+18, y+16);
+        ctx.lineTo(x+11, y+16);
+        ctx.lineTo(x+11, y+19);
+        ctx.lineTo(x+9, y+19);
+        ctx.lineTo(x+9, y+16);
+        ctx.lineTo(x+2, y+16);
+        ctx.lineTo(x+6, y+14);
+        ctx.lineTo(x+4, y+14);
+        ctx.lineTo(x+8, y+8);
+        ctx.lineTo(x+6, y+8);
+        ctx.lineTo(x+10, y);
+        ctx.closePath();
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = this.color;
         ctx.fill();
     }
 }

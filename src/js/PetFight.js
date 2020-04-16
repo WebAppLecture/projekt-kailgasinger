@@ -65,7 +65,7 @@ export class PetFight extends GameTemplate {
             if(this.mapBinding.hasOwnProperty(type)) {
                 let mapUpdate = this.mapBinding[type](active);
                 console.log("mapupdate:" + mapUpdate);
-                if (mapUpdate[0] == "startBattle") {
+                if (mapUpdate && mapUpdate[0] == "startBattle") {
                     this.mode = "battle";
                     this.battlestart(mapUpdate[1]);              
                 }
@@ -88,10 +88,10 @@ export class PetFight extends GameTemplate {
         //else {
             //Keili
             this.mapBinding = {
-                "left": () => this.map.playerMove(-1, 0),
-                "right": () => this.map.playerMove(1, 0),
-                "up": () => this.map.playerMove(0, -1),
-                "down": () => this.map.playerMove(0, 1),
+                "left": (bool) => bool ? this.map.playerMove(-1, 0) : false,
+                "right": (bool) => bool ? this.map.playerMove(1, 0) : false,
+                "up": (bool) => bool ? this.map.playerMove(0, -1) : false,
+                "down": (bool) => bool ? this.map.playerMove(0, 1) : false,
             };
         //}
     }
