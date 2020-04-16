@@ -117,9 +117,9 @@ export class PetFight extends GameTemplate {
     battlestart(enemyName) {
 
         // Block für Daten (Stats, Name, ...)
-        this.player = {name: "Bla", health: 20, maxhealth:35, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
-        let enemy = {name: enemyName, health: 97, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
-        this.playermoves = ["Fireball", "Sparky Breath", "Heatshield", "Bite"];
+        this.player = {name: "Bla", health: 40, maxhealth:40, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
+        let enemy = {name: enemyName, health: 105, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
+        this.playermoves = ["Fireball", "Sparky Breath", "Heatshield", "Punch"];
         let enemymoves = ["Fireball", "Sparky Breath", "Dodge", "Bite"];
         // Ende Datenblock
         this.battle = new Battle(this.player, this.playermoves, enemy, enemymoves);
