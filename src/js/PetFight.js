@@ -51,35 +51,58 @@ export class PetFight extends GameTemplate {
         }
     }
 
+    input(type, active) {
+        if(this.gameOver && type === "primary") {
+            this.start();   
+            this.bindControls();  
+        }
+        if(this.mode === "battle"){
+            if(this.battleBinding.hasOwnProperty(type)) {
+                this.battleBinding[type](active);
+            }
+        }
+        else{
+            if(this.mapBinding.hasOwnProperty(type)) {
+                let mapUpdate = this.mapBinding[type](active);
+                console.log("mapupdate:" + mapUpdate);
+                if (mapUpdate[0] == "startBattle") {
+                    this.mode = "battle";
+                    this.battlestart(mapUpdate[1]);              
+                }
+
+            }
+        }
+        
+    }
+
     bindControls() {
-        if (this.mode == "battle") {
-            this.inputBinding = {  
+        //if (this.mode === "battle") {
+            this.battleBinding = {  
                 "up": (bool) => this.battle.navMoves(bool,-2, this.mode),
                 "right": (bool) => this.battle.navMoves(bool,1, this.mode),
                 "left": (bool) => this.battle.navMoves(bool,-1, this.mode),
                 "down": (bool) => this.battle.navMoves(bool,2, this.mode),
                 "primary": (bool) => this.execAttack(),
             };
-        }
-        else {
+        //}
+        //else {
             //Keili
-            this.inputBinding = {
-                "left": () => this.map.player.x += -10,
-                "right": () => this.map.player.x += 10,
-                "up": () => this.map.player.y += -10,
-                "down": () => this.map.player.y += 10,
+            this.mapBinding = {
+                "left": () => this.map.playerMove(-1, 0),
+                "right": () => this.map.playerMove(1, 0),
+                "up": () => this.map.playerMove(0, -1),
+                "down": () => this.map.playerMove(0, 1),
             };
-        }
+        //}
     }
 
     update(ctx) {
-        if (this.mode == "map") {
-           if (this.map.update() == "startBattle") {
-                this.mode = "battle";
-                this.battlestart();              
-           }
-        }
-        else if (this.mode == "battleAnim") {
+        // if (this.mode == "map") {
+        //     let mapUpdate = this.map.update();
+            
+        // }
+        //else 
+        if (this.mode == "battleAnim") {
             this.timer++;
             this.mode = this.battle.refresh(this.timer, ctx);
         }
@@ -88,11 +111,11 @@ export class PetFight extends GameTemplate {
         }
     }
 
-    battlestart() {
+    battlestart(enemyName) {
 
         // Block für Daten (Stats, Name, ...)
         this.player = {name: "Bla", health: 20, maxhealth:35, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
-        let enemy = {name: "Ene", health: 97, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
+        let enemy = {name: enemyName, health: 97, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
         this.playermoves = ["Fireball", "Punch", "Heatshield", "Bite"];
         let enemymoves = ["Clawstrike", "Tailhit", "Dodge", "Bite"];
         // Ende Datenblock
