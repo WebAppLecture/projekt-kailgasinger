@@ -3,16 +3,20 @@ import { Battle } from "../../src/js/Battle.js";
 import { Map } from "../../src/js/Map.js";
 // Import je nachdem was wir brauchen: => import { GameObject, MovableGameObject, Ball, Mode } from "../GameObject.js";
 
-//Fragen:   1) Wie kann ich in Battle Class Zeichnen/ .... Battle extends GameTemplate wirft Fehler!
+/*Fragen:   1) Wie kann ich in Battle Class Zeichnen/ .... Battle extends GameTemplate wirft Fehler!
+                Geht!
 //          2) Tasten werfen "Multihits" - wie abfangen? (wurde schonmal besprochen)
+                Mit Bool (schon erledigt)
 //          3) Wie funzt das Menu? (Scrollrad& "active")
+                new "menu" (array& callback) verwenden
 //          4) Bei Abändern von this.cd >= 10 höher (Abfangen von Multihits) Fehlermeldung
+                erledigt
 
 //ToDo:     1) Aktivieren von Move berechnet erst Schaden und verrechnet, wählt dann Gegnermove.
 //          2) Animation für Moves
 //          3) Energy für Moves & Ki
 //          4) Life, Exp, ...
-/*
+
 1) dazu miassade dein code seng, vermutlich wird da tick ned im gameLoop aafgruafa.
 2) jeder input call aus der Gameengine hat 2 parameter. Type der die art der eingabe zeigt, und active, ein boolean der bei keydown true und keyup false ist. 
     Den kannst du überprüfen.
@@ -28,13 +32,18 @@ export class PetFight extends GameTemplate {
 
     start() {
         if (this.mode == "battle") {
-            // In battle nur Rechnen?!?
-            this.player = {name: "Bla", life: 35, energy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
-            let enemy = {name: "Ene", life: 25, energy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
-            this.playermoves = ["Fireball", "Punch", "Heatshield", "Bite"];
-            this.playermoves.active=0;
+
+            // Block für Daten (Stats, Name, ...)
+            // Treffquote, Critquote, Dodge, ...
+            this.player = {name: "Bla", health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
+            this.playermoves = ["Fireball", "Punch", "Sparky Breath", "Bite"];
+            let enemy = {name: "Keilis Horrorclown", health: 117, maxhealth: 125, energy:10, maxenergy:22, atk: 3, def: 3, spatk: 2, spdef: 4};
             let enemymoves = ["Clawstrike", "Tailhit", "Dodge", "Bite"];
-            this.battle = new Battle(this.player, this.playermoves, enemy, enemymoves);
+            // Ende Datenblock
+
+            this.battle = new Battle();
+            this.battle.setup(this.player, this.playermoves, enemy, enemymoves);
+            this.timer = 0;
         }
         else {
             this.map = new Map(500, 500, "testmap");
@@ -45,11 +54,11 @@ export class PetFight extends GameTemplate {
     bindControls() {
         if (this.mode == "battle") {
             this.inputBinding = {  
-                "up": (bool) => this.playermoves.active -= 2*bool,
-                "right": (bool) => this.playermoves.active += 1*bool,
-                "left": (bool) => this.playermoves.active -= 1*bool,
-                "down": (bool) => this.playermoves.active += 2*bool,
-                "wheel": (bool) => this.changeActiveItem(event.wheelDelta),
+                "up": (bool) => this.battle.navMoves(bool,-2, this.mode),
+                "right": (bool) => this.battle.navMoves(bool,1, this.mode),
+                "left": (bool) => this.battle.navMoves(bool,-1, this.mode),
+                "down": (bool) => this.battle.navMoves(bool,2, this.mode),
+                "primary": (bool) => this.execAttack(),
             };
         }
         else {
@@ -63,62 +72,57 @@ export class PetFight extends GameTemplate {
         }
     }
 
-    // Scroll Support for attack
-    changeActiveItem(indexChange) {
-        if(indexChange > 0) {
-            let newActive = this.activeItem.previousElementSibling;
-            this.activeItem = newActive || this.domElement.lastElementChild;
-            
-        } else {
-            let newActive = this.activeItem.nextElementSibling;
-            this.activeItem = newActive || this.domElement.firstElementChild;
-        }
-    }
-
-    update() {
+    update(ctx) {
         if (this.mode == "map") {
            if (this.map.update() == "startBattle") {
                 this.mode = "battle";
-               this.battlestart();              
+                this.battlestart();              
            }
         }
-        else {
+        else if (this.mode == "battleAnim") {
+            this.timer++;
+            this.mode = this.battle.refresh(this.timer, ctx);
+        }
+        else if (this.mode == "battle") {
+            this.timer +=1;
         }
     }
 
     battlestart() {
-        this.player = {name: "Bla", life: 35, energy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
-        let enemy = {name: "Ene", life: 25, energy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
+
+        // Block für Daten (Stats, Name, ...)
+        this.player = {name: "Bla", health: 20, maxhealth:35, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
+        let enemy = {name: "Ene", health: 97, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
         this.playermoves = ["Fireball", "Punch", "Heatshield", "Bite"];
-        this.playermoves.active=0;
         let enemymoves = ["Clawstrike", "Tailhit", "Dodge", "Bite"];
+        // Ende Datenblock
         this.battle = new Battle(this.player, this.playermoves, enemy, enemymoves);
-        this.battle.fight();
+        this.battle.setup(this.player, this.playermoves, enemy, enemymoves);
+        this.timer = 0;
         this.bindControls();
+    }
+
+    execAttack() {
+        if (this.timer >= 10 && this.mode == "battle") {
+            this.timer = 0;
+            this.battle.execAttack(this.battle.playermoves[this.battle.playermoves.active]);
+            this.mode = "battleAnim";
+        }
     }
 
     draw(ctx) {
         if (this.mode == "battle") {
-            this.drawMoves(ctx);
+            this.battle.drawBattle(ctx);
+            this.battle.drawMoves(ctx);
         }
-        else {
+        else if (this.mode == "battleAnim") {
+            this.battle.drawBattle(ctx);
+            this.battle.drawCombatLog(ctx);
+        }
+        else if (this.mode == "map") {
             this.map.draw(ctx);
         }
-    }
-
-    drawMoves(ctx) {
-        //let y = 0;
-        for (let x in this.playermoves) {
-            ctx.fillStyle = "#6bd26b";
-            if (this.playermoves.active == x) {
-                ctx.fillStyle = "#000000"
-            }
-            let y = Math.round(x/2-0.1);
-            ctx.font = "15px monospace";
-            ctx.textAlign = "left";
-            ctx.textBaseline = "middle";
-            ctx.fillText(this.playermoves[x], (105+100*(x%2 -1)), 455+(y%2)*15);
-        }
+        ctx.fillText("Debug: "+this.mode+", Timer: "+this.timer, 10, 45);
     }
 
     static get MODES() {
