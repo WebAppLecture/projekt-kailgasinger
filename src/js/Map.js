@@ -13,7 +13,9 @@ export class Map {
         this.maplengthx = 19;//*this.fieldlength;
         this.maplengthy = 24;//*this.fieldlength;
        
-        this.colors = {mountain:"#180b1d", tree:"#02402f", fight:"#ba9714", water:"#db0303", swamp:""};
+        this.colors = {mountain:"#180b1d", tree:"#02402f", fight:"#ba9714", water:"#db0303", ice:""};
+
+        this.allMaps = [];
 
         
 
@@ -24,6 +26,8 @@ export class Map {
             this.entities[i] = [];
             for (let j=0; j<=this.maplengthy; j++){
                 this.entities[i][j] = {content: undefined};
+
+
                 if (i === 0 || j === 0 || i === this.maplengthx || j === this.maplengthy){
                     this.entities[i][j].content = new Tree (this.colors["tree"], "tree", "");
                 }
@@ -33,6 +37,39 @@ export class Map {
         this.player = new Player(10, 12, this.size, this.size, "#180b1d", 10);
         this.entities[10][12].content = this.player;
     }
+
+    // myMaps(){
+    //     this.allMaps.push(
+    //         [____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //                 ____________________,
+    //         ])
+
+
+    // }
 
     playerMove(di, dj) {
         let newPlayeri = this.player.i + di,
@@ -46,7 +83,7 @@ export class Map {
         } else if(targetField.type === "fight"){
             let mapUpdate = [];
             mapUpdate[0] = "startBattle";
-            mapUpdate[1] = this.entities[newPlayerj][newPlayerj].name;
+            mapUpdate[1] = this.entities[newPlayerj][newPlayerj].content.name;
             return mapUpdate;
         }
         
@@ -107,8 +144,7 @@ export class Map {
                 //         //console.log("fight");
                 //         mapUpdate[0] = "startBattle";
                 //         mapUpdate[1] = this.entities[i][j].name;
-                //         return mapUpdate;
-                        
+                //         return mapUpdate;                        
                 //     }
                 //     if (this.entities[i][j].type === "tree"){
                 //         mapUpdate[0] = "map";
