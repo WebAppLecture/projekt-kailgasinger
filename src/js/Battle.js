@@ -44,7 +44,7 @@ export class Battle {
         // analog dem Playerkommentar:
         this.enemy = enemy;
         this.enemymoves = enemymoves;
-        this.eCreature = new BattleCreature(250,0, 150, 150, "enemy", enemy.sprite);
+        this.eCreature = new BattleCreature(250,10, 150, 150, "enemy", enemy.sprite);
 
         this.playermoves.active = 0;
         this.drawer = new BattleDrawer();
