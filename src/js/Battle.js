@@ -70,7 +70,7 @@ export class Battle {
         let dmg = this.calcDmg();
         this.dmgTxt = this.getDmgText(dmg[0]);
         this.dmg = dmg[1];
-        this.drawer.drawAnim(this.enemymoves[this.enemyMoveNr], dmg[0], 310, 40, -1, 1);
+        this.drawer.drawAnim(this.enemymoves[this.enemyMoveNr], dmg[0], 310, 40, -1.5, 1);
         this.player.health -= this.dmg;
     }
     // Ende der zukünftig einen Funktion!

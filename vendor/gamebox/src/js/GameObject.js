@@ -16,7 +16,7 @@ export class GameObject {
     draw(ctx) {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 0;
         ctx.shadowColor = this.color;
     }
 

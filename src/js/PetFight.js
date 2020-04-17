@@ -36,9 +36,9 @@ export class PetFight extends GameTemplate {
             // Block für Daten (Stats, Name, ...)
             // Treffquote, Critquote, Dodge, ...
             this.player = {name: "Bla", health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
-            this.playermoves = ["Fireball", "Punch", "Sparky Breath", "Bite"];
+            this.playermoves = ["Fireball", "Fiery Breath", "Freeze", "Bite"];
             let enemy = {name: "Keili", health: 117, maxhealth: 125, energy:10, maxenergy:22, atk: 3, def: 3, spatk: 2, spdef: 4};
-            let enemymoves = ["Clawstrike", "Fireball", "Sparky Breath", "Bite"];
+            let enemymoves = ["Clawstrike", "Fireball", "Fiery Breath", "Fiery Breath"];
             // Ende Datenblock
 
             this.battle = new Battle();
@@ -119,8 +119,8 @@ export class PetFight extends GameTemplate {
         // Block für Daten (Stats, Name, ...)
         this.player = {name: "Bla", health: 40, maxhealth:40, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
         let enemy = {name: enemyName, health: 105, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
-        this.playermoves = ["Fireball", "Sparky Breath", "Heatshield", "Punch"];
-        let enemymoves = ["Fireball", "Sparky Breath", "Dodge", "Bite"];
+        this.playermoves = ["Fireball", "Freeze", "Heatshield", "Punch"];
+        let enemymoves = ["Fireball", "Fiery Breath", "Dodge", "Fiery Breath"];
         // Ende Datenblock
         this.battle = new Battle(this.player, this.playermoves, enemy, enemymoves);
         this.battle.setup(this.player, this.playermoves, enemy, enemymoves);
