@@ -36,9 +36,9 @@ export class PetFight extends GameTemplate {
             // Block für Daten (Stats, Name, ...)
             // Treffquote, Critquote, Dodge, ...
             this.player = {name: "Bla", health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
-            this.playermoves = ["Fireball", "Punch", "Sparky Breath", "Bite"];
-            let enemy = {name: "Keilis Horrorclown", health: 117, maxhealth: 125, energy:10, maxenergy:22, atk: 3, def: 3, spatk: 2, spdef: 4};
-            let enemymoves = ["Clawstrike", "Tailhit", "Dodge", "Bite"];
+            this.playermoves = ["Fireball", "Fiery Breath", "Freeze", "Bite"];
+            let enemy = {name: "Keili", health: 117, maxhealth: 125, energy:10, maxenergy:22, atk: 3, def: 3, spatk: 2, spdef: 4};
+            let enemymoves = ["Clawstrike", "Fireball", "Fiery Breath", "Fiery Breath"];
             // Ende Datenblock
 
             this.battle = new Battle();
@@ -97,27 +97,30 @@ export class PetFight extends GameTemplate {
     }
 
     update(ctx) {
-        // if (this.mode == "map") {
-        //     let mapUpdate = this.map.update();
-            
-        // }
-        //else 
+        // Timer hier checken (in update, viel einfacher!)
         if (this.mode == "battleAnim") {
             this.timer++;
-            this.mode = this.battle.refresh(this.timer, ctx);
+            this.mode = this.battle.refresh(this.timer, ctx, this.mode);
+                if (this.mode == "enemyBattleAnim") {
+                    this.timer = 0;
+                }
         }
         else if (this.mode == "battle") {
             this.timer +=1;
+        }
+        else if (this.mode == "enemyBattleAnim") {
+            this.timer++;
+            this.mode = this.battle.refresh(this.timer, ctx, this.mode);
         }
     }
 
     battlestart(enemyName) {
 
         // Block für Daten (Stats, Name, ...)
-        this.player = {name: "Bla", health: 20, maxhealth:35, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
-        let enemy = {name: enemyName, health: 97, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
-        this.playermoves = ["Fireball", "Punch", "Heatshield", "Bite"];
-        let enemymoves = ["Clawstrike", "Tailhit", "Dodge", "Bite"];
+        this.player = {name: "Bla", health: 40, maxhealth:40, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
+        let enemy = {name: enemyName, health: 105, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
+        this.playermoves = ["Fireball", "Freeze", "Heatshield", "Punch"];
+        let enemymoves = ["Fireball", "Fiery Breath", "Dodge", "Fiery Breath"];
         // Ende Datenblock
         this.battle = new Battle(this.player, this.playermoves, enemy, enemymoves);
         this.battle.setup(this.player, this.playermoves, enemy, enemymoves);
@@ -138,9 +141,13 @@ export class PetFight extends GameTemplate {
             this.battle.drawBattle(ctx);
             this.battle.drawMoves(ctx);
         }
-        else if (this.mode == "battleAnim") {
+        else if (this.mode == "battleAnim")  {
             this.battle.drawBattle(ctx);
-            this.battle.drawCombatLog(ctx);
+            this.battle.drawCombatLog(ctx, "player");
+        }
+        else if (this.mode == "enemyBattleAnim") {
+            this.battle.drawBattle(ctx);
+            this.battle.drawCombatLog(ctx, "enemy");
         }
         else if (this.mode == "map") {
             this.map.draw(ctx);
