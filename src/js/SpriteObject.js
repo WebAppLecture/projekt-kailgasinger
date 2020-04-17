@@ -1,6 +1,7 @@
 
 import { GameObject, MovableGameObject, Ball, Mode } from "../../vendor/gamebox/src/js/GameObject.js";
 
+/*
 export class SpriteObject extends GameObject {
 
     constructor(x, y, width, height, color, sprite="none") {
@@ -23,6 +24,7 @@ export class SpriteObject extends GameObject {
     }
 
 }
+*/
 
 export class MovableSpriteObject extends MovableGameObject {
 
@@ -35,12 +37,12 @@ export class MovableSpriteObject extends MovableGameObject {
         if (this.sprite == "none") {
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
-            ctx.shadowBlur = 10;
+            ctx.shadowBlur = 0;
             ctx.shadowColor = this.color;
         }
         else {
             let image = new Image();
-            image.src = "../../src/images/"+this.sprite;
+            image.src = "../../src/images/attacks/"+this.sprite;
             ctx.drawImage(image, this.x, this.y, this.width, this.height)
         }
     }
