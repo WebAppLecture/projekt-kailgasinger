@@ -13,9 +13,57 @@ export class Map {
         this.maplengthx = 19;//*this.fieldlength;
         this.maplengthy = 24;//*this.fieldlength;
        
-        this.colors = {mountain:"#180b1d", tree:"#02402f", fight:"#ba9714", water:"#db0303", ice:""};
+        this.colors = {mountain:"#180b1d", tree:"#02402f", fight:"#601815", water:"#db0303", ice:""};
 
         this.allMaps = [];
+
+        this.allMaps[0]= (
+            ["TTTTTTTTTTTTTTTTTTTTTTTT",
+            "TTT____________________T",
+            "T______________________T",
+            "T_______E____________TTT",
+            "TT_________________TTTTT",
+            "TTT_________________TTTT",
+            "TTTTTTT_______________TT",
+            "TTTTTT____________TTTTTT",
+            "TTT_____________TTTTTTT_",
+            "TT_________________T_TT_",
+            "TTT____________________T",
+            "TT______________D_TTTTTT",
+            "T___________________TTTT",
+            "TTTT__________________TT",
+            "_T__________________TTTT",
+            "T____________________TTT",
+            "T____________________TTT",
+            "T_________________TTT___",
+            "TT__________________T_TT",
+            "TTTTTTTTTTTTTT_____TTTTT",
+            "TTTTTTTTTTTTTTTTTTTTTTTT",
+            ]
+        )
+        this.allMaps[0]= (
+            ["TTTTTTTTTTTTTTTTTTTTTTTT",
+            "T______________________T",
+            "T______________________T",
+            "T_______E______________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "TTTTTT_________________T",
+            "T________________TTTTTTT",
+            "TT_____________________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "T__________________D___T",
+            "T______________________T",
+            "T______________________T",
+            "TTTTTTTTTTTTTTTTTTTTTTTT",
+            ]
+        )
 
         
 
@@ -25,51 +73,44 @@ export class Map {
         for (let i=0; i<=this.maplengthx; i++){
             this.entities[i] = [];
             for (let j=0; j<=this.maplengthy; j++){
+                //console.log(this.allMaps[0][i]);
+                console.log(this.allMaps[0][i].charAt(j));
                 this.entities[i][j] = {content: undefined};
 
+                switch(this.allMaps[0][i].charAt(j)){                  
 
-                if (i === 0 || j === 0 || i === this.maplengthx || j === this.maplengthy){
-                    this.entities[i][j].content = new Tree (this.colors["tree"], "tree", "");
+                    // case "_": this.entities[i][j] = {content: undefined};
+                    // break;
+                    case "T": this.entities[i][j].content = new Tree (this.colors["tree"], "tree", "");
+                    break;
+                    case "E": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Böser Hase"));
+                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.name);
+                    break;
+                    case "D": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Dachs"));
+                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.name);
+                    break;
+                    
                 }
+
+
+
+            //     this.entities[i][j] = {content: undefined};
+
+
+
+
+            //     if (i === 0 || j === 0 || i === this.maplengthx || j === this.maplengthy){
+            //         this.entities[i][j].content = new Tree (this.colors["tree"], "tree", "");
+            //     }
             }
         }
-        this.entities[9][9].content = ( new MapObject("#000000", "fight", "Böser Hase"));
+        //this.entities[9][9].content = ( new MapObject("#000000", "fight", "Böser Hase"));
         this.player = new Player(10, 12, this.size, this.size, "#180b1d", 10);
         this.entities[10][12].content = this.player;
     }
 
-    // myMaps(){
-    //     this.allMaps.push(
-    //         [____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //                 ____________________,
-    //         ])
-
-
-    // }
+    myMaps(){
+    }
 
     playerMove(di, dj) {
         let newPlayeri = this.player.i + di,
@@ -83,7 +124,7 @@ export class Map {
         } else if(targetField.type === "fight"){
             let mapUpdate = [];
             mapUpdate[0] = "startBattle";
-            mapUpdate[1] = this.entities[newPlayerj][newPlayerj].content.name;
+            mapUpdate[1] = this.entities[newPlayeri][newPlayerj].content.name;
             return mapUpdate;
         }
         
