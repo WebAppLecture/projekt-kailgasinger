@@ -1,3 +1,9 @@
+
+/*
+    Sprite Spiegeln!
+
+*/
+
 export class BattleCreature {
 
     constructor(x, y, width, height, type, sprite="none") {

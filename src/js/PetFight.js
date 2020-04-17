@@ -35,9 +35,9 @@ export class PetFight extends GameTemplate {
 
             // Block für Daten (Stats, Name, ...)
             // Treffquote, Critquote, Dodge, ...
-            this.player = {name: "Bla", health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
+            this.player = {name: "Bla", sprite: "sealing.png", health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
             this.playermoves = ["Fireball", "Fiery Breath", "Freeze", "Bite"];
-            let enemy = {name: "Keili", health: 117, maxhealth: 125, energy:10, maxenergy:22, atk: 3, def: 3, spatk: 2, spdef: 4};
+            let enemy = {name: "Keili", sprite: "flameling.png", health: 117, maxhealth: 125, energy:10, maxenergy:22, atk: 3, def: 3, spatk: 2, spdef: 4};
             let enemymoves = ["Clawstrike", "Fireball", "Fiery Breath", "Fiery Breath"];
             // Ende Datenblock
 
@@ -67,7 +67,7 @@ export class PetFight extends GameTemplate {
                 console.log("mapupdate:" + mapUpdate);
                 if (mapUpdate && mapUpdate[0] == "startBattle") {
                     this.mode = "battle";
-                    this.battlestart(mapUpdate[1]);              
+                    this.battlestart(mapUpdate[1], mapUpdate[2]);              
                 }
 
             }
@@ -114,11 +114,11 @@ export class PetFight extends GameTemplate {
         }
     }
 
-    battlestart(enemyName) {
+    battlestart(enemyName, enemySprite) {
 
         // Block für Daten (Stats, Name, ...)
-        this.player = {name: "Bla", health: 40, maxhealth:40, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
-        let enemy = {name: enemyName, health: 105, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
+        this.player = {name: "Bla", sprite: "sealing.png", health: 40, maxhealth:40, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
+        let enemy = {name: enemyName, sprite: enemySprite, health: 105, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
         this.playermoves = ["Fireball", "Freeze", "Heatshield", "Punch"];
         let enemymoves = ["Fireball", "Fiery Breath", "Dodge", "Fiery Breath"];
         // Ende Datenblock

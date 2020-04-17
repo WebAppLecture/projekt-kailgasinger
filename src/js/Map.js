@@ -125,6 +125,12 @@ export class Map {
             let mapUpdate = [];
             mapUpdate[0] = "startBattle";
             mapUpdate[1] = this.entities[newPlayeri][newPlayerj].content.name;
+            if (mapUpdate[1] == "Böser Hase") {
+                mapUpdate[2] = "bad_rabbit.png";    //durchpipen!
+            }
+            else {
+                mapUpdate[2] = "flameling.png";
+            }
             return mapUpdate;
         }
         

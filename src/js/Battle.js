@@ -39,12 +39,12 @@ export class Battle {
         // es existiert ein BattleCreatureObject - da soll alles rein!
         this.playermoves = playermoves;
         this.player = player;
-        this.pCreature = new BattleCreature(0,300, 150, 150, "player", "sealing.png");
+        this.pCreature = new BattleCreature(0,300, 150, 150, "player", player.sprite);
         
         // analog dem Playerkommentar:
         this.enemy = enemy;
         this.enemymoves = enemymoves;
-        this.eCreature = new BattleCreature(250,0, 150, 150, "enemy", "flameling.png");
+        this.eCreature = new BattleCreature(250,0, 150, 150, "enemy", enemy.sprite);
 
         this.playermoves.active = 0;
         this.drawer = new BattleDrawer();
