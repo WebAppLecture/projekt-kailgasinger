@@ -1,23 +1,43 @@
 
 
 export class Map {
-    constructor(maplengthx, maplengthy, name){
-        this.maplengthx = maplengthx;
-        this.maplengthy = maplengthy;
-        this.name = name;
+    constructor(playerPosx, playerPosy, currentMapx, currentMapy){
+        this.playerPosx = playerPosx;
+        this.playerPosy = playerPosy;
+        this.currentMapx = currentMapx; // Position der aktuellen Map im Map Array allMaps
+        this.currentMapy = currentMapy;
     }
 
     start() {
-        this.battleencounter = false; //bei true -> in Battle wechseln
         this.size = 20; 
-        this.maplengthx = 19;//*this.fieldlength;
-        this.maplengthy = 24;//*this.fieldlength;
+        this.maplengthx = 19;
+        this.maplengthy = 24;
+        console.log("aktuelle Map nach start():" + this.currentMapx)
        
-        this.colors = {mountain:"#180b1d", tree:"#02402f", fight:"#601815", water:"#db0303", ice:""};
-
+        this.colors = {nextMap:"#20860D", mountain:"#180b1d", tree:"#02402f", fight:"#601815", water:"#db0303", ice:""};
+        if (!this.currentMapx){
+            this.currentMapx = 0;
+        }
+        if (!this.currentMapy){
+            this.currentMapy = 0;
+        }
+        
+        let iMax = 5;
+        let jMax = 3;
         this.allMaps = [];
 
-        this.allMaps[0]= (
+        let count = 1;
+        for (let i=0; i<iMax; i++) {
+        this.allMaps[i] = [];
+        for (let j=0; j<jMax; j++) {
+            this.allMaps[i][j] = count;
+            count++;
+        }
+        }
+
+        // hier Maps erstellen. 
+
+        this.allMaps[0][0]= (
             ["TTTTTTTTTTTTTTTTTTTTTTTT",
             "TTT____________________T",
             "T______________________T",
@@ -28,24 +48,23 @@ export class Map {
             "TTTTTT____________TTTTTT",
             "TTT_____________TTTTTTT_",
             "TT_________________T_TT_",
-            "TTT____________________T",
+            "TTT____________________S",
             "TT______________D_TTTTTT",
             "T___________________TTTT",
             "TTTT__________________TT",
             "_T__________________TTTT",
             "T____________________TTT",
             "T____________________TTT",
-            "T_________________TTT___",
+            "T______________________T",
             "TT__________________T_TT",
-            "TTTTTTTTTTTTTT_____TTTTT",
-            "TTTTTTTTTTTTTTTTTTTTTTTT",
+            "TTTTTTTTTTTTTTTTTTTTTOTT",
             ]
         )
-        this.allMaps[0]= (
-            ["TTTTTTTTTTTTTTTTTTTTTTTT",
+        this.allMaps[1][0]= (
+            ["TTTTTTTTTTTTTTTTTTTTTWTT",
             "T______________________T",
             "T______________________T",
-            "T_______E______________T",
+            "T_______E______________S",
             "T______________________T",
             "T______________________T",
             "T______________________T",
@@ -58,7 +77,53 @@ export class Map {
             "T______________________T",
             "T______________________T",
             "T______________________T",
-            "T__________________D___T",
+            "T__________________D___S",
+            "T______________________T",
+            "T______________________T",
+            "TTTTTTTTTTTTTTTTTTTTTTTT",
+            ]
+        )
+        this.allMaps[0][1]= (
+            ["TTTTTTTTTTTTTTTTTTTTTTTT",
+            "TTT____________________T",
+            "T______________________T",
+            "T_______E____________TTT",
+            "TT_________________TTTTT",
+            "TTT_________________TTTT",
+            "TTTTTTT_______________TT",
+            "TTTTTT____________TTTTTT",
+            "TTT_____________TTTTTTT_",
+            "TT_________________T_TT_",
+            "N__T___________________T",
+            "TT______________D_TTTTTT",
+            "T___________________TTTT",
+            "TTTT__________________TT",
+            "_T__________________TTTT",
+            "T____________________TTT",
+            "T____________________TTT",
+            "T______________________T",
+            "TT__________________T_TT",
+            "TTTTTTTTTTTTTTTTTTTTTOTT",
+            ]
+        )
+        this.allMaps[1][1]= (
+            ["TTTTTTTTTTTTTTTTTTTTTWTT",
+            "T______________________T",
+            "T______________________T",
+            "N_______E______________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "TTTTTT_________________T",
+            "T________________TTTTTTT",
+            "TT_____________________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "T______________________T",
+            "N__________________D___T",
             "T______________________T",
             "T______________________T",
             "TTTTTTTTTTTTTTTTTTTTTTTT",
@@ -69,25 +134,39 @@ export class Map {
 
         // Entity Test ab hier:
         this.entities = [];
-        
+        console.log("aktuelle Map vor entitie Test:" + this.currentMapx)
+       
         for (let i=0; i<=this.maplengthx; i++){
             this.entities[i] = [];
             for (let j=0; j<=this.maplengthy; j++){
                 //console.log(this.allMaps[0][i]);
-                console.log(this.allMaps[0][i].charAt(j));
+                // console.log(this.allMaps[0][i].charAt(j));
+                // console.log(this.currentMapx);
                 this.entities[i][j] = {content: undefined};
 
-                switch(this.allMaps[0][i].charAt(j)){                  
+                switch(this.allMaps[this.currentMapx][this.currentMapy][i].charAt(j)){                  
 
                     // case "_": this.entities[i][j] = {content: undefined};
                     // break;
                     case "T": this.entities[i][j].content = new Tree (this.colors["tree"], "tree", "");
                     break;
                     case "E": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Böser Hase"));
-                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.name);
+                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
                     break;
                     case "D": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Dachs"));
-                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.name);
+                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
+                    break;
+                    case "O": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "east", "Osten"));                  
+                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
+                    break;
+                    case "W": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "west", "Westen"));                  
+                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
+                    break;
+                    case "S": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "south", "Süden"));                  
+                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
+                    break;
+                    case "N": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "north", "Norden"));                  
+                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
                     break;
                     
                 }
@@ -105,8 +184,17 @@ export class Map {
             }
         }
         //this.entities[9][9].content = ( new MapObject("#000000", "fight", "Böser Hase"));
-        this.player = new Player(10, 12, this.size, this.size, "#180b1d", 10);
-        this.entities[10][12].content = this.player;
+        console.log("Player x: " + this.playerPosx + " Player y:" + this.playerPosy)
+        if(!this.playerPosx && !this.playerPosx){
+            this.playerPosx = 12;
+            this.playerPosy = 10;
+        
+        }
+        console.log("Player x nach if: " + this.playerPosx + " Player y:" + this.playerPosy)
+
+
+        this.player = new Player(this.playerPosx, this.playerPosy, this.size, this.size, "#180b1d", 10);
+        this.entities[this.playerPosx][this.playerPosy].content = this.player;
     }
 
     myMaps(){
@@ -121,37 +209,75 @@ export class Map {
             this.entities[this.player.i][this.player.j].content = undefined;
             this.entities[newPlayeri][newPlayerj].content = this.player;
             this.player.move(di, dj);
-        } else if(targetField.type === "fight"){
+        } 
+        else {
             let mapUpdate = [];
-            mapUpdate[0] = "startBattle";
-            mapUpdate[1] = this.entities[newPlayeri][newPlayerj].content.name;
-            return mapUpdate;
+            switch(targetField.type){
+                case "fight": {
+                    
+                    mapUpdate[0] = "startBattle";
+                    mapUpdate[1] = this.entities[newPlayeri][newPlayerj].content.name;
+                    return mapUpdate;
+                }
+                case "east": {
+                    // this.nextMap = new Map(0, this.playerPosy, this.currentMapx+1);
+                    // this.nextMap.start();
+                    console.log("jetzt nach Osten")
+                    mapUpdate[0] = "nextMap";
+                    mapUpdate[1] = 1;
+                    mapUpdate[2] = newPlayerj;
+                    mapUpdate[3] = this.currentMapx+1;
+                    mapUpdate[4] = this.currentMapy;
+                    //console.log("Player x:" + this.playerPosy + " Map:" + this.currentMapx);
+                    //console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
+                    return mapUpdate;
+                }
+                case "west": {
+                    console.log("jetzt nach Westen")
+                    mapUpdate[0] = "nextMap";
+                    mapUpdate[1] = 18;
+                    mapUpdate[2] = newPlayerj;
+                    mapUpdate[3] = this.currentMapx-1;
+                    mapUpdate[4] = this.currentMapy;
+                    return mapUpdate;
+
+                }
+                case "north": {
+                    mapUpdate[0] = "nextMap";
+                    mapUpdate[1] = newPlayeri;
+                    mapUpdate[2] = 22;
+                    mapUpdate[3] = this.currentMapx;
+                    mapUpdate[4] = this.currentMapy-1;
+                    return mapUpdate;
+
+                }
+                case "south": {
+                    mapUpdate[0] = "nextMap";
+                    mapUpdate[1] = newPlayeri;
+                    mapUpdate[2] = 1;
+                    mapUpdate[3] = this.currentMapx;
+                    mapUpdate[4] = this.currentMapy+1;
+                    return mapUpdate;
+
+                }
+            }
+
+
         }
+        
+        
+        
+            // if(targetField.type === "fight"){
+            // let mapUpdate = [];
+            // mapUpdate[0] = "startBattle";
+            // mapUpdate[1] = this.entities[newPlayeri][newPlayerj].content.name;
+            // return mapUpdate;
+        //}
+        //this.entities[i][j].content.start();
+        //new Map(0, this.playerPosy, this.currentMapx+1)
         
         return false;
     }
-    // drawTree(ctx, x, y) {        
-    //     ctx.fillStyle = "#10C47D";
-    //     ctx.beginPath();
-    //     ctx.moveTo(i+10, y);
-    //     ctx.lineTo(i+14, j+8);
-    //     ctx.lineTo(i+12, j+8);
-    //     ctx.lineTo(i+16, j+14);
-    //     ctx.lineTo(i+14, j+14);
-    //     ctx.lineTo(i+18, j+16);
-    //     ctx.lineTo(i+11, j+16);
-    //     ctx.lineTo(i+11, j+19);
-    //     ctx.lineTo(i+9, j+19);
-    //     ctx.lineTo(i+9, j+16);
-    //     ctx.lineTo(i+2, j+16);
-    //     ctx.lineTo(i+6, j+14);
-    //     ctx.lineTo(i+4, j+14);
-    //     ctx.lineTo(i+8, j+8);
-    //     ctx.lineTo(i+6, j+8);
-    //     ctx.lineTo(i+10, y);
-    //     ctx.closePath(200, 99);
-    //     ctx.fill();
-    // }
 
     draw(ctx){
         this.player.draw(ctx);
