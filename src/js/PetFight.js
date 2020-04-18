@@ -66,7 +66,7 @@ export class PetFight extends GameTemplate {
             if(this.mapBinding.hasOwnProperty(type)) {
                 
                 let mapUpdate = this.mapBinding[type](active);
-                console.log("mapupdate:" + mapUpdate);
+                //console.log("mapupdate:" + mapUpdate);
                 //console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
                 if (mapUpdate && mapUpdate[0] === "startBattle") {
                     this.mode = "battle";
@@ -74,14 +74,12 @@ export class PetFight extends GameTemplate {
                 }
                 // wird ein Feld betreten, dass eine neue Map aufruft, wird sie hier erstellt
                 if (mapUpdate && mapUpdate[0] === "nextMap"){
-                    console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
+                    //console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
                     this.map = new Map(mapUpdate[1], mapUpdate[2], mapUpdate[3], mapUpdate[4]);
                     this.map.start();
                 }
-
             }
-        }
-        
+        }        
     }
 
     bindControls() {

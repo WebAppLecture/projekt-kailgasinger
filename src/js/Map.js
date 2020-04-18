@@ -12,16 +12,16 @@ export class Map {
         this.size = 20; 
         this.maplengthx = 19;
         this.maplengthy = 24;
-        console.log("aktuelle Map nach start():" + this.currentMapx)
+        console.log("aktuelle Map nach start():" + this.currentMapx + "/" + this.currentMapy);
        
-        this.colors = {nextMap:"#20860D", mountain:"#180b1d", tree:"#02402f", fight:"#601815", water:"#db0303", ice:""};
+        this.colors = {nextMap:"#20860D", mountain:"#180b1d", tree:"#02402f", fight:"#601815", water:"#0E69FB", ice:""};
         if (!this.currentMapx){
             this.currentMapx = 0;
         }
         if (!this.currentMapy){
             this.currentMapy = 0;
         }
-        
+        //Array für die Maps erstellen
         let iMax = 5;
         let jMax = 3;
         this.allMaps = [];
@@ -38,49 +38,49 @@ export class Map {
         // hier Maps erstellen. 
 
         this.allMaps[0][0]= (
-            ["TTTTTTTTTTTTTTTTTTTTTTTT",
-            "TTT____________________T",
-            "T______________________T",
-            "T_______E____________TTT",
+            ["TTTTTTTTTTTMMMMMMMMMMMMM",
+            "TTT______________MMMMMMM",
+            "T__________________MMMMM",
+            "T_______E____________TMT",
             "TT_________________TTTTT",
             "TTT_________________TTTT",
-            "TTTTTTT_______________TT",
+            "TTTTTTT______T________TT",
             "TTTTTT____________TTTTTT",
             "TTT_____________TTTTTTT_",
             "TT_________________T_TT_",
             "TTT____________________S",
             "TT______________D_TTTTTT",
             "T___________________TTTT",
-            "TTTT__________________TT",
-            "_T__________________TTTT",
-            "T____________________TTT",
+            "TTTTUU________________TT",
+            "UUUUUUUUUT__________TTTT",
+            "T____UUUU____________TTT",
             "T____________________TTT",
             "T______________________T",
-            "TT__________________T_TT",
-            "TTTTTTTTTTTTTTTTTTTTTOTT",
+            "TT__________________T_UU",
+            "TTTTTTTTTTTTTTTTTTTTTOTU",
             ]
         )
         this.allMaps[1][0]= (
-            ["TTTTTTTTTTTTTTTTTTTTTWTT",
+            ["TTTTTTTTTTTTTTTTTTTTTWTU",
+            "T______________________U",
+            "T___________________UUUU",
+            "T_______E__________UU__S",
+            "T______________MMUUU___T",
+            "T_____________MMMMU____T",
+            "T______________MMMMM___T",
             "T______________________T",
-            "T______________________T",
-            "T_______E______________S",
-            "T______________________T",
-            "T______________________T",
-            "T______________________T",
-            "T______________________T",
-            "T______________________T",
-            "TTTTTT_________________T",
-            "T________________TTTTTTT",
-            "TT_____________________T",
-            "T______________________T",
+            "T_________TTT__________T",
+            "TTTTTT_____TT__________T",
+            "T__TTTTTTTTTTTTTTTTTTTTT",
+            "TT____TTT______T____T__T",
+            "T______T_________TTTTT_T",
             "T______________________T",
             "T______________________T",
             "T______________________T",
             "T__________________D___S",
-            "T______________________T",
-            "T______________________T",
-            "TTTTTTTTTTTTTTTTTTTTTTTT",
+            "MM_____________________T",
+            "MMMM___________________T",
+            "MMMMMTTTTTTTTTTTTTTTTTTT",
             ]
         )
         this.allMaps[0][1]= (
@@ -99,11 +99,11 @@ export class Map {
             "T___________________TTTT",
             "TTTT__________________TT",
             "_T__________________TTTT",
-            "T____________________TTT",
-            "T____________________TTT",
-            "T______________________T",
-            "TT__________________T_TT",
-            "TTTTTTTTTTTTTTTTTTTTTOTT",
+            "UUUUUU_______________TTT",
+            "UUUUUUUUUU___________TTT",
+            "UUUUUUUU_______________T",
+            "UUUU________________T_TT",
+            "UUUUTTTTTTTTTTTTTTTTTOTT",
             ]
         )
         this.allMaps[1][1]= (
@@ -112,15 +112,15 @@ export class Map {
             "T______________________T",
             "N_______E______________T",
             "T______________________T",
-            "T______________________T",
-            "T______________________T",
-            "T______________________T",
-            "T______________________T",
-            "TTTTTT_________________T",
-            "T________________TTTTTTT",
-            "TT_____________________T",
-            "T______________________T",
-            "T______________________T",
+            "T_____________MM_______T",
+            "T______________MM______T",
+            "T_______________MMMMMM_T",
+            "T__________________MM__T",
+            "TTTTTT_____TTTTTTMMMM__T",
+            "TU_____UUUUUUTTTTTTTTTTT",
+            "TTTT______UUUUUUUTTTTT_T",
+            "MMMMMM_________________T",
+            "MMMM___________________T",
             "T______________________T",
             "T______________________T",
             "N__________________D___T",
@@ -134,7 +134,7 @@ export class Map {
 
         // Entity Test ab hier:
         this.entities = [];
-        console.log("aktuelle Map vor entitie Test:" + this.currentMapx)
+        //console.log("aktuelle Map vor entitie Test:" + this.currentMapx)
        
         for (let i=0; i<=this.maplengthx; i++){
             this.entities[i] = [];
@@ -144,53 +144,37 @@ export class Map {
                 // console.log(this.currentMapx);
                 this.entities[i][j] = {content: undefined};
 
-                switch(this.allMaps[this.currentMapx][this.currentMapy][i].charAt(j)){                  
-
-                    // case "_": this.entities[i][j] = {content: undefined};
-                    // break;
+                switch(this.allMaps[this.currentMapx][this.currentMapy][i].charAt(j)){
                     case "T": this.entities[i][j].content = new Tree (this.colors["tree"], "tree", "");
                     break;
+                    case "U": this.entities[i][j].content = new Water (this.colors["water"], "water", "");
+                    break;
+                    case "M": this.entities[i][j].content = new Mountain (this.colors["mountain"], "mountain", "");
+                    break;
                     case "E": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Böser Hase"));
-                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
                     break;
                     case "D": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Dachs"));
-                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
                     break;
-                    case "O": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "east", "Osten"));                  
-                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
+                    case "O": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "east", "Osten"));
                     break;
-                    case "W": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "west", "Westen"));                  
-                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
+                    case "W": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "west", "Westen"));
                     break;
-                    case "S": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "south", "Süden"));                  
-                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
+                    case "S": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "south", "Süden"));
                     break;
-                    case "N": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "north", "Norden"));                  
-                    //console.log(i + "und" + j + "name" + this.entities[i][j].content.type);
+                    case "N": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "north", "Norden"));
                     break;
                     
                 }
-
-
-
-            //     this.entities[i][j] = {content: undefined};
-
-
-
-
-            //     if (i === 0 || j === 0 || i === this.maplengthx || j === this.maplengthy){
-            //         this.entities[i][j].content = new Tree (this.colors["tree"], "tree", "");
-            //     }
             }
         }
         //this.entities[9][9].content = ( new MapObject("#000000", "fight", "Böser Hase"));
-        console.log("Player x: " + this.playerPosx + " Player y:" + this.playerPosy)
+        //console.log("Player x: " + this.playerPosx + " Player y:" + this.playerPosy)
         if(!this.playerPosx && !this.playerPosx){
             this.playerPosx = 12;
             this.playerPosy = 10;
         
         }
-        console.log("Player x nach if: " + this.playerPosx + " Player y:" + this.playerPosy)
+        //console.log("Player x nach if: " + this.playerPosx + " Player y:" + this.playerPosy)
 
 
         this.player = new Player(this.playerPosx, this.playerPosy, this.size, this.size, "#180b1d", 10);
@@ -220,20 +204,16 @@ export class Map {
                     return mapUpdate;
                 }
                 case "east": {
-                    // this.nextMap = new Map(0, this.playerPosy, this.currentMapx+1);
-                    // this.nextMap.start();
-                    console.log("jetzt nach Osten")
+                    //console.log("jetzt nach Osten")
                     mapUpdate[0] = "nextMap";
                     mapUpdate[1] = 1;
                     mapUpdate[2] = newPlayerj;
                     mapUpdate[3] = this.currentMapx+1;
                     mapUpdate[4] = this.currentMapy;
-                    //console.log("Player x:" + this.playerPosy + " Map:" + this.currentMapx);
-                    //console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
                     return mapUpdate;
                 }
                 case "west": {
-                    console.log("jetzt nach Westen")
+                    //console.log("jetzt nach Westen")
                     mapUpdate[0] = "nextMap";
                     mapUpdate[1] = 18;
                     mapUpdate[2] = newPlayerj;
@@ -264,18 +244,6 @@ export class Map {
 
 
         }
-        
-        
-        
-            // if(targetField.type === "fight"){
-            // let mapUpdate = [];
-            // mapUpdate[0] = "startBattle";
-            // mapUpdate[1] = this.entities[newPlayeri][newPlayerj].content.name;
-            // return mapUpdate;
-        //}
-        //this.entities[i][j].content.start();
-        //new Map(0, this.playerPosy, this.currentMapx+1)
-        
         return false;
     }
 
@@ -289,11 +257,6 @@ export class Map {
             for (let j in this.entities[i]){ 
                 if (this.entities[i][j].content) {         
                     this.entities[i][j].content.draw(ctx, i, j, this.size);
-                    // if (this.entities[i][j].content.type === "tree"){
-                    // //console.log("x:" + this.entities[i].x)
-                    // //console.log("y:" + this.entities[i].y)
-                    //     this.drawTree(ctx, this.entities[i][j].content.x, this.entities[i][j].content.y);
-                    //}
                 }
             }
         }
@@ -305,23 +268,6 @@ export class Map {
             for (let j in this.entities[i]) {
                 //hier dann mal Update für Gegnerbewegung
 
-
-                // if (MapObject.rectangleCollision(this.entities[i][j], this.player)) {
-                //     if (this.entities[i][j].type === "fight"){
-                //         //console.log("fight");
-                //         mapUpdate[0] = "startBattle";
-                //         mapUpdate[1] = this.entities[i][j].name;
-                //         return mapUpdate;                        
-                //     }
-                //     if (this.entities[i][j].type === "tree"){
-                //         mapUpdate[0] = "map";
-                //         // irgendwie schaffen, dass man nicht auf diese Feld laufen kann 
-                //     }
-                // }
-                // else {
-                //     mapUpdate[0] = "map";
-                //     return mapUpdate;
-                // }
             }
         }
         
@@ -336,11 +282,84 @@ export class MapObject{
         this.name = name;
     }
     draw(ctx, i, j, size){
-        ctx.fillStyle = this.color;
-        ctx.shadowBlur = 10;
+        
+        ctx.shadowBlur = 4;
         ctx.shadowColor = this.color;
+        ctx.fillStyle = this.color;
         ctx.fillRect(i*size, j*size, size, size);
     }  
+
+}
+export class Mountain extends MapObject{
+    draw(ctx, i, j, size){
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "transparent";
+        let x = i * size,
+            y = j * size;
+        ctx.fillStyle = "#111111";
+        ctx.fillRect(x, y, size, size);
+
+        ctx.fillStyle = "#D5E9F6";
+        ctx.beginPath();
+        ctx.moveTo(x, y+20);
+        ctx.lineTo(x, y+20);
+        ctx.lineTo(x+10, y+3);
+        ctx.lineTo(x+20, y+20);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = "#575D63";
+        ctx.beginPath();
+        ctx.moveTo(x, y+20);
+        ctx.lineTo(x, y+20);
+        ctx.lineTo(x+7, y+7);
+        ctx.lineTo(x+16, y+20);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = "#575D63";
+        ctx.beginPath();
+        ctx.moveTo(x, y+20);
+        ctx.lineTo(x+4, y+20);
+        ctx.lineTo(x+13, y+6);
+        ctx.lineTo(x+20, y+20);
+        ctx.closePath();
+        ctx.fill();
+    }
+}
+export class Water extends MapObject{
+    draw(ctx, i, j, size){
+        ctx.shadowBlur = -0;
+        ctx.shadowColor = "transparent";        
+        let x = i * size,
+            y = j * size;
+        ctx.fillStyle = "#4694EF";
+        ctx.fillRect(x, y, size, size);
+
+        ctx.beginPath();
+        ctx.arc(x+5, y+11, 5,1.2*Math.PI,1.8*Math.PI);
+        ctx.arc(x+15, y+7, 5,0.8*Math.PI,2.2*Math.PI, true);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x+5, y+16, 5,1.2*Math.PI,1.8*Math.PI);
+        ctx.arc(x+15, y+12, 5,0.8*Math.PI,2.2*Math.PI, true);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x+5, y+6, 5,1.2*Math.PI,1.8*Math.PI);
+        ctx.arc(x+15, y+2, 5,0.8*Math.PI,2.2*Math.PI, true);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x+5, y+21, 5,1.2*Math.PI,1.8*Math.PI);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x+15, y-3, 5,0.8*Math.PI,2.2*Math.PI, true);
+        ctx.stroke();
+        ctx.strokeStyle = "#1665E4";
+    }
 
 }
 export class Tree extends MapObject{
@@ -371,7 +390,6 @@ export class Tree extends MapObject{
         ctx.fill();
     }
 }
-
 export class Player extends MapObject{
     constructor(i, j){
         super("#fdff3e", "Player", "Player");
@@ -384,11 +402,3 @@ export class Player extends MapObject{
     }
 
 }
-
-// export class MapObject extends GameObject{
-//     constructor(x, y, width, height, color, type, name){
-//         super(x, y, width, height, color);
-//         this.type = type;
-//         this.name = name;
-//     }
-// }
