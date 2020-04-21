@@ -3,16 +3,20 @@
     Sprite Spiegeln!
 
 */
+import { GameObject } from "../../vendor/gamebox/src/js/GameObject.js";
 
-export class BattleCreature {
 
-    constructor(x, y, width, height, type, sprite="none") {
-        this.x = x;
-        this.y = y;
+export class BattleCreature extends GameObject {
+
+    constructor(x, y, width, height, color, type, name, sprite="none", creatureStats, creatureMoves, creatureTypes, creatureAbilities) {
+        super(x, y, width, height, color)
         this.type = type;
-        this.width = width;
-        this.height = height;
+        this.name = name;
         this.sprite = sprite;
+        this.stats = creatureStats; //this.player = {name: "Bla", health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
+        this.moves = creatureMoves;
+        this.types = creatureTypes;
+        this.abilities = creatureAbilities;
     }
 
     draw(ctx) {

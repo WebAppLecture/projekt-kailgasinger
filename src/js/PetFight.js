@@ -35,14 +35,16 @@ export class PetFight extends GameTemplate {
 
             // Block für Daten (Stats, Name, ...)
             // Treffquote, Critquote, Dodge, ...
-            this.player = {name: "Bla", sprite: "sealing.png", health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
+            this.player = {name: "Bla", sprite: "sealing.png"};
+            this.playerstats = {health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
             this.playermoves = ["Fireball", "Fiery Breath", "Freeze", "Bite"];
-            let enemy = {name: "Keili", sprite: "flameling.png", health: 117, maxhealth: 125, energy:10, maxenergy:22, atk: 3, def: 3, spatk: 2, spdef: 4};
-            let enemymoves = ["Clawstrike", "Fireball", "Fiery Breath", "Fiery Breath"];
+            this.enemy = {name: "Keili", sprite: "flameling.png"};
+            this.enemystats = {health: 117, maxhealth: 125, energy:10, maxenergy:22, atk: 3, def: 3, spatk: 2, spdef: 4};
+            this.enemymoves = ["Clawstrike", "Fireball", "Fiery Breath", "Fiery Breath"];
             // Ende Datenblock
 
             this.battle = new Battle();
-            this.battle.setup(this.player, this.playermoves, enemy, enemymoves);
+            this.battle.setup(this.player, this.playerstats, this.playermoves, this.enemy, this.enemystats, this.enemymoves);
             this.timer = 0;
         }
         else {
@@ -131,7 +133,7 @@ export class PetFight extends GameTemplate {
     execAttack() {
         if (this.timer >= 10 && this.mode == "battle") {
             this.timer = 0;
-            this.battle.execAttack(this.battle.playermoves[this.battle.playermoves.active]);
+            this.battle.execPAttack(this.battle.playermoves[this.battle.playermoves.active]);
             this.mode = "battleAnim";
         }
     }

@@ -1,8 +1,11 @@
 
 import { GameObject, MovableGameObject, Ball, Mode } from "../../vendor/gamebox/src/js/GameObject.js";
 import { MovableSpriteObject } from "./SpriteObject.js";
+import { BattleCreature } from "./BattleCreature.js";
 
 
+// update?!? z.B. mit bei Kollision => Explosion o.ä.
+// |-> Problem bezgl. Kollision :/
 export class AttackAnim extends MovableSpriteObject {
 
     constructor(x, y, width, height, color, vx, vy, sprite="none", type="default", vxStart, vyStart) {
@@ -10,20 +13,27 @@ export class AttackAnim extends MovableSpriteObject {
         this.type = type;
         this.vxStart = vxStart;
         this.vyStart = vyStart;
+        this.lifetime = 0;
     }
 
     randomize() {
+        let rand = Math.random();
         switch (this.type) {
             case "Fiery Breath": case "Spark":
                 this.vx += 0.5*(Math.random()-0.5);
                 this.vy += 0.5*(Math.random()-0.5);
             break;
             case "Fireball":
-                let rand = 0.3*Math.random();
-                this.vx +=rand*this.vxStart;
-                this.vy +=rand*this.vyStart;
-                this.width +=6*rand;
-                this.height +=6*rand;
+                this.vx +=0.3*rand*this.vxStart;
+                this.vy +=0.3*rand*this.vyStart;
+                this.width +=2*rand;
+                this.height +=2*rand;
+            break;
+            case "Freeze":
+                this.vx -=rand*0.02*this.vxStart;
+                this.vy -=rand*0.02*this.vyStart;
+                this.width +=rand;
+                this.height +=rand;
             break;
         }
     }
@@ -47,5 +57,19 @@ export class AttackAnim extends MovableSpriteObject {
             break;
         }
     }
+
+    /*
+    update(ctx) {
+        this.x += this.vx;
+        this.y += this.vy;
+        if(GameObject.rectangleCollision(this, BattleCreature)) {   // && this.lifetime >= 100
+            this.vx = 0;
+            this.vy = 0;
+            console.log("Zeit:"+this.lifetime);
+        }
+        else {
+            this.lifetime++;
+        }
+    }   */
 
 }
