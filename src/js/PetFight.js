@@ -31,7 +31,7 @@ import { Map } from "../../src/js/Map.js";
 export class PetFight extends GameTemplate {
 
     start() {
-        if (this.mode == "battle") {
+        if (this.mode === "battle") {
 
             // Block für Daten (Stats, Name, ...)
             // Treffquote, Critquote, Dodge, ...
@@ -48,8 +48,9 @@ export class PetFight extends GameTemplate {
             this.timer = 0;
         }
         else {
-            this.map = new Map(500, 500, "testmap");
+            this.map = new Map(10, 12,);
             this.map.start();
+            console.log("beim Zeichnen der Map " + this.map.currentMapx)
         }
     }
 
@@ -65,20 +66,25 @@ export class PetFight extends GameTemplate {
         }
         else{
             if(this.mapBinding.hasOwnProperty(type)) {
+                
                 let mapUpdate = this.mapBinding[type](active);
-                console.log("mapupdate:" + mapUpdate);
-                if (mapUpdate && mapUpdate[0] == "startBattle") {
+                //console.log("mapupdate:" + mapUpdate);
+                //console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
+                if (mapUpdate && mapUpdate[0] === "startBattle") {
                     this.mode = "battle";
                     this.battlestart(mapUpdate[1], mapUpdate[2]);              
                 }
-
+                // wird ein Feld betreten, dass eine neue Map aufruft, wird sie hier erstellt
+                if (mapUpdate && mapUpdate[0] === "nextMap"){
+                    //console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
+                    this.map = new Map(mapUpdate[1], mapUpdate[2], mapUpdate[3], mapUpdate[4]);
+                    this.map.start();
+                }
             }
-        }
-        
+        }        
     }
 
     bindControls() {
-        //if (this.mode === "battle") {
             this.battleBinding = {  
                 "up": (bool) => this.battle.navMoves(bool,-2, this.mode),
                 "right": (bool) => this.battle.navMoves(bool,1, this.mode),
@@ -86,17 +92,14 @@ export class PetFight extends GameTemplate {
                 "down": (bool) => this.battle.navMoves(bool,2, this.mode),
                 "primary": (bool) => this.execAttack(),
             };
-        //}
-        //else {
-            //Keili
             this.mapBinding = {
                 "left": (bool) => bool ? this.map.playerMove(-1, 0) : false,
                 "right": (bool) => bool ? this.map.playerMove(1, 0) : false,
                 "up": (bool) => bool ? this.map.playerMove(0, -1) : false,
                 "down": (bool) => bool ? this.map.playerMove(0, 1) : false,
             };
-        //}
     }
+
 
     update(ctx) {
         // Timer hier checken (in update, viel einfacher!)
@@ -107,7 +110,7 @@ export class PetFight extends GameTemplate {
                     this.timer = 0;
                 }
         }
-        else if (this.mode == "battle") {
+        else if (this.mode === "battle") {
             this.timer +=1;
         }
         else if (this.mode == "enemyBattleAnim") {
@@ -139,7 +142,7 @@ export class PetFight extends GameTemplate {
     }
 
     draw(ctx) {
-        if (this.mode == "battle") {
+        if (this.mode === "battle") {
             this.battle.drawBattle(ctx);
             this.battle.drawMoves(ctx);
         }
@@ -151,7 +154,7 @@ export class PetFight extends GameTemplate {
             this.battle.drawBattle(ctx);
             this.battle.drawCombatLog(ctx, "enemy");
         }
-        else if (this.mode == "map") {
+        else if (this.mode === "map") {
             this.map.draw(ctx);
         }
         ctx.fillText("Debug: "+this.mode+", Timer: "+this.timer, 10, 45);
