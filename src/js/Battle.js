@@ -2,7 +2,8 @@ import { GameTemplate } from "../../vendor/gamebox/src/js/games/GameTemplate.js"
 import { Menu } from "../../vendor/gamebox/src/js/Menu.js";
 import { GameObject, MovableGameObject, Ball, Mode } from "../../vendor/gamebox/src/js/GameObject.js";
 import { BattleDrawer } from "../../src/js/BattleDrawer.js";
-
+import { BattleCreature } from "./BattleCreature.js";
+import { LibMove } from "../../src/js/LibMove.js";
 
 /* Fragen Louis:
 1)  Canvas&Css Interaktion/ how to use Css tricks (animations,...) in ctx
@@ -34,11 +35,17 @@ Eigenes:
 
 export class Battle {
 
-    setup(player, playermoves, enemy, enemymoves) {
+    setup(player, playerstats, playermoves, enemy, enemystats, enemymoves) {
+
+        // es existiert ein BattleCreatureObject - da soll alles rein!
         this.playermoves = playermoves;
+        this.pCreature = new BattleCreature(0,300, 150, 150, "color", "player", player.name, player.sprite, playerstats, playermoves);
         this.player = player;
+        
+        // analog dem Playerkommentar:
         this.enemy = enemy;
         this.enemymoves = enemymoves;
+        this.eCreature = new BattleCreature(250,10, 150, 150, "color", "enemy", enemy.name, enemy.sprite, enemystats, enemymoves);
 
         this.playermoves.active = 0;
         this.drawer = new BattleDrawer();
@@ -55,33 +62,55 @@ export class Battle {
         }
     }
 
-    execAttack(move) {
-        // execute Attack based on name, check for energy, calc dmg, call AnimationFn (examples down below)
-        let dmg = this.calcDmg(move);
-        this.dmgTxt = this.getDmgText(dmg[0]);
-        this.dmg = dmg[1];
-        this.drawer.drawAnim(move, dmg[0]);
-        this.enemy.health -= this.dmg;
+    execPAttack(move) {
+        this.execAttack(move, this.pCreature, this.eCreature, 1, -1, 95, 30);
     }
 
-    calcDmg(move) {
+    // neue Fn. für beide Kreaturen:
+    execAttack(move, caster, aim, vx, vy, xOff, yOff) {
+        let moveSpecs = LibMove.GetMove(move);  // Enthält Power, Offsets, ...
+        console.log(moveSpecs);
+        let dmg = this.calcDmg(move, caster, aim);
+        this.dmgTxt = this.getDmgText(dmg[0]);
+        this.dmg = dmg[1];
+        this.drawer.drawAnim(move, dmg[0], caster.x+xOff, caster.y+yOff, vx, vy);
+        aim.stats.health -= this.dmg;
+        caster.stats.energy -= 3;   // ersetzen
+    }
+
+    execEnemyMoves() {  // Noch keine Energie bisher! Zusammenfassen mit execAttack und bessere Stringfn.!!!
+        this.enemyMoveNr = Math.floor(this.eCreature.moves.length*Math.random());
+        console.log(this.eCreature.moves[this.enemyMoveNr]);
+        this.execAttack(this.eCreature.moves[this.enemyMoveNr], this.eCreature, this.pCreature, -1.2, 1, -20, 20);
+    }
+    // Ende der zukünftig einen Funktion!
+
+    calcDmg(move, caster, aim) {
         //Eigentlich switch move (und dann Schaden berechnen), grob:
         let dmg = [];
         dmg[0] = 0.5 + Math.random();   //"Crit/ Fail"
-        dmg[1] = Math.round(((this.player.atk/this.enemy.def) +2 )*5*dmg[0]);    //dmg
+        dmg[1] = Math.round(((caster.stats.atk/aim.stats.def) +2 )*5*dmg[0]);    //dmg
         console.log(dmg);
         return dmg;
     }
 
-    refresh(timer, ctx) {    // Auch Ausgang des Kampfes wird hier festgestellt!
+    refresh(timer, ctx, mode) {    // Auch Ausgang des Kampfes wird hier festgestellt!
         // Update Anims:
         this.updateAnims(ctx);
-        if (timer >= 120) {
+        if ((timer >= 160) && (mode == "battleAnim")) {
+            this.delAnims();
+            this.execEnemyMoves();
+            return "enemyBattleAnim";
+        }
+        else if ((timer >= 160) && (mode == "enemyBattleAnim")) {
             this.delAnims();
             return "battle";
         }
-        else {
+        else if ((timer < 160) && (mode == "battleAnim")) {
             return "battleAnim";
+        }
+        else {
+            return "enemyBattleAnim";
         }
     }
 
@@ -93,10 +122,15 @@ export class Battle {
         this.drawer.attackAnims = [];
     }
 
-    drawCombatLog(ctx, dmg, dmgText) {
-        this.drawer.drawString(ctx, "#000000", 5, 455, this.player.name+" used "+this.playermoves[this.playermoves.active], "left","middle", "20px monospace");
-        this.drawer.drawString(ctx,"#000000", 5, 475, this.dmgTxt+" and caused "+this.dmg+" damage.", "left","middle", "14px monospace");
-
+    drawCombatLog(ctx, user) {
+        if (user == "player") {
+            this.drawer.drawString(ctx, "#000000", 5, 455, this.player.name+" used "+this.playermoves[this.playermoves.active], "left","middle", "20px monospace");
+            this.drawer.drawString(ctx,"#000000", 5, 475, this.dmgTxt+" and caused "+this.dmg+" damage.", "left","middle", "14px monospace");    
+        }
+        else if (user == "enemy") {
+            this.drawer.drawString(ctx, "#000000", 5, 455, this.enemy.name+" used "+this.eCreature.moves[this.enemyMoveNr], "left","middle", "20px monospace");
+            this.drawer.drawString(ctx,"#000000", 5, 475, this.dmgTxt+" and caused "+this.dmg+" damage.", "left","middle", "14px monospace");   
+        }
         for (let x in this.drawer.attackAnims) {
             this.drawer.attackAnims[x].draw(ctx);
         }
@@ -126,21 +160,21 @@ export class Battle {
     drawHealth(ctx) {
         //Spieler:
         this.drawer.drawBox(ctx, "#C81D1A", 101, 410, 200, 14); //Maxhealth
-        this.drawer.drawBox(ctx, "#25DE0F", 102, 411, 199*(this.player.health/this.player.maxhealth) -1, 12);
+        this.drawer.drawBox(ctx, "#25DE0F", 102, 411, 199*(this.pCreature.stats.health/this.pCreature.stats.maxhealth) -1, 12);
 
         //Enemy:
         this.drawer.drawBox(ctx, "#C81D1A", 97, 8, 200, 14);
-        this.drawer.drawBox(ctx, "#25DE0F", 98+199*(1-this.enemy.health/this.enemy.maxhealth), 9, 199*(this.enemy.health/this.enemy.maxhealth) -1, 12); 
+        this.drawer.drawBox(ctx, "#25DE0F", 98+199*(1-this.eCreature.stats.health/this.eCreature.stats.maxhealth), 9, 199*(this.eCreature.stats.health/this.eCreature.stats.maxhealth) -1, 12); 
     }
 
     drawEnergy(ctx) {
         //Spieler:
         this.drawer.drawBox(ctx, "#211D26", 101, 425, 200, 14); //MaxEn
-        this.drawer.drawBox(ctx, "#1B6BEF", 102, 426, 199*(this.player.energy/this.player.maxenergy) -1, 12);
+        this.drawer.drawBox(ctx, "#1B6BEF", 102, 426, 199*(this.pCreature.stats.energy/this.pCreature.stats.maxenergy) -1, 12);
 
         //Enemy:
         this.drawer.drawBox(ctx, "#211D26", 97, 23, 200, 14);
-        this.drawer.drawBox(ctx, "#1B6BEF", 98+199*(1-this.enemy.energy/this.enemy.maxenergy), 24, 199*(this.enemy.energy/this.enemy.maxenergy) -1, 12);
+        this.drawer.drawBox(ctx, "#1B6BEF", 98+199*(1-this.eCreature.stats.energy/this.eCreature.stats.maxenergy), 24, 199*(this.eCreature.stats.energy/this.eCreature.stats.maxenergy) -1, 12);
     }
 
     drawNames(ctx, pName, eName) {  // AUslagern:P => done!
@@ -159,11 +193,12 @@ export class Battle {
         this.drawMovesBackgr(ctx);
         this.drawHealth(ctx);
         this.drawEnergy(ctx);
-        this.drawNames(ctx, this.player.name, this.enemy.name);
+        this.drawNames(ctx, this.pCreature.name, this.eCreature.name);
     }
 
     drawMonsters(ctx) {
         //Auslagern:    Spielermonster (durch Sprite ersetzen!)
+        /*
         ctx.fillStyle = "#10C47D"
         ctx.beginPath();
         ctx.moveTo(10, 480);
@@ -172,8 +207,11 @@ export class Battle {
         ctx.lineTo(20, 300);
         ctx.closePath(200, 99);
         ctx.fill();
+        */
+       this.pCreature.draw(ctx);
 
         //Auslagern:    Gegnermonster (durch Sprite ersetzen!)
+        /*
         ctx.fillStyle = "#D62F15"
         ctx.beginPath();
         ctx.moveTo(290, 80);
@@ -183,6 +221,8 @@ export class Battle {
         ctx.lineTo(310, 100);
         ctx.closePath(390, 99);
         ctx.fill();
+        */
+       this.eCreature.draw(ctx);
     }
 
     //getter:

@@ -241,8 +241,6 @@ export class Map {
 
                 }
             }
-
-
         }
         return false;
     }
