@@ -73,7 +73,7 @@ export class PetFight extends GameTemplate {
                 if (mapUpdate && mapUpdate[0] === "startBattle") {
                     this.mode = "battle";
                     this.timer = 0;
-                    this.battle.setup(this.player, this.playerstats, this.playermoves, mapUpdate[2]);              
+                    this.battle.setup(this.player, this.playerstats, this.playermoves, mapUpdate[1]);              
                 }
                 // wird ein Feld betreten, dass eine neue Map aufruft, wird sie hier erstellt
                 if (mapUpdate && mapUpdate[0] === "nextMap"){

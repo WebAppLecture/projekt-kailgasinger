@@ -1,5 +1,13 @@
 import { BattleCreature } from "./BattleCreature.js";
 
+/*
+    - Starter wählen ;)
+    - 
+    - 
+*/
+
+
+
 export class LibCreature {
 
     static GetCreature (name, rand) {   // rand= 0 ^= exact values || rand >0 ^= randomized values
