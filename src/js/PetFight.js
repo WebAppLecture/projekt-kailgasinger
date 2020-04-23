@@ -31,20 +31,20 @@ import { Map } from "../../src/js/Map.js";
 export class PetFight extends GameTemplate {
 
     start() {
+        this.map = new Map(10, 12,); // neue Karte muss hier erstellt werden!
+        this.map.start();
+        this.battle = new Battle(); // neues Kampfobjekt analog ;)
+
+        // Block für Daten (Stats, Name, ...)
+        // Treffquote, Critquote, Dodge, ...
+        this.player = {name: "Bla", sprite: "sealing.png"};
+        this.playerstats = {health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
+        this.playermoves = ["Fireball", "Fiery Breath", "Freeze", "Bite"];
+        // Ende Datenblock
+
         if (this.mode === "battle") {
 
-            // Block für Daten (Stats, Name, ...)
-            // Treffquote, Critquote, Dodge, ...
-            this.player = {name: "Bla", sprite: "sealing.png"};
-            this.playerstats = {health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
-            this.playermoves = ["Fireball", "Fiery Breath", "Freeze", "Bite"];
-            this.enemy = {name: "Keili", sprite: "flameling.png"};
-            this.enemystats = {health: 117, maxhealth: 125, energy:10, maxenergy:22, atk: 3, def: 3, spatk: 2, spdef: 4};
-            this.enemymoves = ["Clawstrike", "Fireball", "Fiery Breath", "Fiery Breath"];
-            // Ende Datenblock
-
-            this.battle = new Battle();
-            this.battle.setup(this.player, this.playerstats, this.playermoves, this.enemy, this.enemystats, this.enemymoves);
+            this.battle.setup(this.player, this.playerstats, this.playermoves);
             this.timer = 0;
         }
         else {
@@ -69,10 +69,11 @@ export class PetFight extends GameTemplate {
                 
                 let mapUpdate = this.mapBinding[type](active);
                 //console.log("mapupdate:" + mapUpdate);
-                //console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
+                console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
                 if (mapUpdate && mapUpdate[0] === "startBattle") {
                     this.mode = "battle";
-                    this.battlestart(mapUpdate[1], mapUpdate[2]);              
+                    this.timer = 0;
+                    this.battle.setup(this.player, this.playerstats, this.playermoves, mapUpdate[2]);              
                 }
                 // wird ein Feld betreten, dass eine neue Map aufruft, wird sie hier erstellt
                 if (mapUpdate && mapUpdate[0] === "nextMap"){
@@ -90,7 +91,7 @@ export class PetFight extends GameTemplate {
                 "right": (bool) => this.battle.navMoves(bool,1, this.mode),
                 "left": (bool) => this.battle.navMoves(bool,-1, this.mode),
                 "down": (bool) => this.battle.navMoves(bool,2, this.mode),
-                "primary": (bool) => this.execAttack(),
+                "primary": (bool) => this.battle.ExecAttack(),
             };
             this.mapBinding = {
                 "left": (bool) => bool ? this.map.playerMove(-1, 0) : false,
@@ -100,64 +101,27 @@ export class PetFight extends GameTemplate {
             };
     }
 
-
+   
     update(ctx) {
-        // Timer hier checken (in update, viel einfacher!)
-        if (this.mode == "battleAnim") {
-            this.timer++;
-            this.mode = this.battle.refresh(this.timer, ctx, this.mode);
-                if (this.mode == "enemyBattleAnim") {
-                    this.timer = 0;
-                }
-        }
-        else if (this.mode === "battle") {
-            this.timer +=1;
-        }
-        else if (this.mode == "enemyBattleAnim") {
-            this.timer++;
-            this.mode = this.battle.refresh(this.timer, ctx, this.mode);
+        if (this.mode == "battle"){
+           // console.log("Update!");
+            this.mode = this.battle.updateBattle(ctx);  // Bekommt Kampfende zurück!
+        } else {
+            console.log(this.mode);
         }
     }
+    
 
-    battlestart(enemyName, enemySprite) {
-
-        // Block für Daten (Stats, Name, ...)
-        this.player = {name: "Bla", sprite: "sealing.png", health: 40, maxhealth:40, energy:30, maxenergy:35, atk: 5, def: 3, spatk: 5, spdef: 4};
-        let enemy = {name: enemyName, sprite: enemySprite, health: 105, maxhealth:105, energy:20, maxenergy:20, atk: 3, def: 3, spatk: 2, spdef: 4};
-        this.playermoves = ["Fireball", "Freeze", "Heatshield", "Punch"];
-        let enemymoves = ["Fireball", "Fiery Breath", "Dodge", "Fiery Breath"];
-        // Ende Datenblock
-        this.battle = new Battle(this.player, this.playermoves, enemy, enemymoves);
-        this.battle.setup(this.player, this.playermoves, enemy, enemymoves);
-        this.timer = 0;
-        this.bindControls();
-    }
-
-    execAttack() {
-        if (this.timer >= 10 && this.mode == "battle") {
-            this.timer = 0;
-            this.battle.execPAttack(this.battle.playermoves[this.battle.playermoves.active]);
-            this.mode = "battleAnim";
-        }
-    }
-
+    // Battle (if this.mode == "battle") => this.battle.draw(ctx)!
     draw(ctx) {
-        if (this.mode === "battle") {
-            this.battle.drawBattle(ctx);
-            this.battle.drawMoves(ctx);
+        if (this.mode == "battle") {
+            //console.log("Draw!");
+            this.battle.draw(ctx);
         }
-        else if (this.mode == "battleAnim")  {
-            this.battle.drawBattle(ctx);
-            this.battle.drawCombatLog(ctx, "player");
-        }
-        else if (this.mode == "enemyBattleAnim") {
-            this.battle.drawBattle(ctx);
-            this.battle.drawCombatLog(ctx, "enemy");
-        }
-        else if (this.mode === "map") {
+        else if (this.mode == "map") {
+            //console.log("Auf Karte?!?");
             this.map.draw(ctx);
         }
-        ctx.fillText("Debug: "+this.mode+", Timer: "+this.timer, 10, 45);
     }
 
     static get MODES() {

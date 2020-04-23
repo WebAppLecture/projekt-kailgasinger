@@ -151,9 +151,9 @@ export class Map {
                     break;
                     case "M": this.entities[i][j].content = new Mountain (this.colors["mountain"], "mountain", "");
                     break;
-                    case "E": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Böser Hase"));
+                    case "E": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Bad Rabbit"));
                     break;
-                    case "D": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Dachs"));
+                    case "D": this.entities[i][j].content = ( new MapObject(this.colors["fight"], "fight", "Flameling"));
                     break;
                     case "O": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "east", "Osten"));
                     break;

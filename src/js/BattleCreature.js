@@ -1,20 +1,23 @@
 
 /*
     Sprite Spiegeln!
-
+    Vom Battle wieder auf Map!
+    BattleCreatureLib (ReturnCreature(name))
+    Randomness!
 */
 import { GameObject } from "../../vendor/gamebox/src/js/GameObject.js";
 
 
 export class BattleCreature extends GameObject {
 
-    constructor(x, y, width, height, color, type, name, sprite="none", creatureStats, creatureMoves, creatureTypes, creatureAbilities) {
+    constructor(x, y, width, height, color, type, name, sprite="none", creatureStats, creatureMoves, getXp, creatureTypes, creatureAbilities) {
         super(x, y, width, height, color)
         this.type = type;
         this.name = name;
         this.sprite = sprite;
         this.stats = creatureStats; //this.player = {name: "Bla", health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
         this.moves = creatureMoves;
+        this.getXp = getXp;
         this.types = creatureTypes;
         this.abilities = creatureAbilities;
     }
