@@ -14,7 +14,7 @@ export class Map {
         this.maplengthy = 24;
         console.log("aktuelle Map nach start():" + this.currentMapx + "/" + this.currentMapy);
        
-        this.colors = {nextMap:"#20860D", mountain:"#180b1d", tree:"#02402f", fight:"#601815", water:"#0E69FB", ice:""};
+        this.colors = {nextMap:"#20860D", mountain:"#180b1d", tree:"#02402f", fight:"#601815", water:"#0E69FB", healer:"#FFFFFF"};
         if (!this.currentMapx){
             this.currentMapx = 0;
         }
@@ -56,7 +56,7 @@ export class Map {
             "T____UUUU____________TTT",
             "T____________________TTT",
             "T______________________T",
-            "TT__________________T_UU",
+            "TTH_________________T_UU",
             "TTTTTTTTTTTTTTTTTTTTTOTU",
             ]
         )
@@ -163,6 +163,8 @@ export class Map {
                     break;
                     case "N": this.entities[i][j].content = ( new MapObject(this.colors["nextMap"], "north", "Norden"));
                     break;
+                    case "H": this.entities[i][j].content = ( new MapObject(this.colors["healer"], "healer", "Heiler"));
+                    break;
                     
                 }
             }
@@ -239,6 +241,10 @@ export class Map {
                     mapUpdate[4] = this.currentMapy+1;
                     return mapUpdate;
 
+                }
+                case "healer": {
+                    mapUpdate[0] = "healer";
+                    return mapUpdate;
                 }
             }
         }
