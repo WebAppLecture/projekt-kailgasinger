@@ -75,6 +75,9 @@ export class PetFight extends GameTemplate {
                     this.timer = 0;
                     this.battle.setup(this.player, this.playerstats, this.playermoves, mapUpdate[1]);              
                 }
+                else if (mapUpdate && mapUpdate[0] === "healer") {
+                    this.heal();              
+                }
                 // wird ein Feld betreten, dass eine neue Map aufruft, wird sie hier erstellt
                 if (mapUpdate && mapUpdate[0] === "nextMap"){
                     //console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
@@ -122,6 +125,10 @@ export class PetFight extends GameTemplate {
             //console.log("Auf Karte?!?");
             this.map.draw(ctx);
         }
+    }
+
+    heal() {
+        this.playerstats.health = this.playerstats.maxhealth;
     }
 
     static get MODES() {
