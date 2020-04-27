@@ -1,10 +1,8 @@
 
 /*
     Sprite Spiegeln!
-    Vom Battle wieder auf Map!
-    BattleCreatureLib (ReturnCreature(name))
-    Randomness!
 */
+
 import { GameObject } from "../../vendor/gamebox/src/js/GameObject.js";
 
 
@@ -59,7 +57,11 @@ export class BattleCreature extends GameObject {
             }
             let image = new Image();
             image.src = "../../src/images/creatures/"+this.sprite;
+            /*ctx.save(); // Save the current state
+            ctx.scale(-1, 1); // Set scale to flip the image
+            this.x *=-1;*/
             ctx.drawImage(image, this.x, this.y, this.width, this.height);
+            //ctx.restore(); // Restore the last saved state
         }
     }
 
