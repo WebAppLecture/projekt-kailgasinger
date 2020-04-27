@@ -1,31 +1,15 @@
 import { GameTemplate } from "../../vendor/gamebox/src/js/games/GameTemplate.js";
 import { Battle } from "../../src/js/Battle.js";
 import { Map } from "../../src/js/Map.js";
-// Import je nachdem was wir brauchen: => import { GameObject, MovableGameObject, Ball, Mode } from "../GameObject.js";
-
-/*Fragen:   1) Wie kann ich in Battle Class Zeichnen/ .... Battle extends GameTemplate wirft Fehler!
-                Geht!
-//          2) Tasten werfen "Multihits" - wie abfangen? (wurde schonmal besprochen)
-                Mit Bool (schon erledigt)
-//          3) Wie funzt das Menu? (Scrollrad& "active")
-                new "menu" (array& callback) verwenden
-//          4) Bei Abändern von this.cd >= 10 höher (Abfangen von Multihits) Fehlermeldung
-                erledigt
+import { Start } from "../../src/js/Start.js";
+import { LibCreature } from "../../src/js/LibCreature.js"
+import { BattleCreature } from "../../src/js/BattleCreature.js"
 
 //ToDo:     1) Aktivieren von Move berechnet erst Schaden und verrechnet, wählt dann Gegnermove.
 //          2) Animation für Moves
 //          3) Energy für Moves & Ki
 //          4) Life, Exp, ...
 
-1) dazu miassade dein code seng, vermutlich wird da tick ned im gameLoop aafgruafa.
-2) jeder input call aus der Gameengine hat 2 parameter. Type der die art der eingabe zeigt, und active, ein boolean der bei keydown true und keyup false ist. 
-    Den kannst du überprüfen.
-3) Du kannst selber einfach eine Instanz von Menu erstellen, die auf das gleiche menu element im HTML verweist, und die mit eigenen Inhalten laden.
-4) Keine Ahnung warum das fehler wirft, aber so fängst du multihits nicht ab :wink: (siehe oben) 
-    Zwecks Rundenbasiertem system: Du musst deine Änderungen eventbasiert machen und nicht kontinuierlich in update(). 
-    Das sYstem braucht dann natürlich noch einen Stagemanager der die interaktionen in sinnvolle Wege leitet.
-
-*/
 
 
 export class PetFight extends GameTemplate {
@@ -37,20 +21,28 @@ export class PetFight extends GameTemplate {
 
         // Block für Daten (Stats, Name, ...)
         // Treffquote, Critquote, Dodge, ...
-        this.player = {name: "Bla", sprite: "sealing.png"};
-        this.playerstats = {health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
-        this.playermoves = ["Fireball", "Fiery Breath", "Freeze", "Bite"];
         // Ende Datenblock
 
         if (this.mode === "battle") {
 
-            this.battle.setup(this.player, this.playerstats, this.playermoves);
+            // Direkt Battle
+            this.player = {name: "Bla", sprite: "sealing.png"};
+            this.playerstats = {health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
+            this.playermoves = ["Fireball", "Fiery Breath", "Freeze", "Bite"];
+            this.pCreature = new BattleCreature(0,300, 150, 150, "color", "player", this.player.name, this.player.sprite, this.playerstats, this.playermoves)
+            // Ende direkt Battle
+
+            this.battle.setup(this.pCreature);
             this.timer = 0;
         }
-        else {
+        else if (this.mode === "map") {
             this.map = new Map(10, 12,);
             this.map.start();
             console.log("beim Zeichnen der Map " + this.map.currentMapx)
+        }
+        else if (this.mode == "start") {
+            this.start = new Start();
+            this.start.setup
         }
     }
 
@@ -64,16 +56,25 @@ export class PetFight extends GameTemplate {
                 this.battleBinding[type](active);
             }
         }
-        else{
+        else if (this.mode === "start") {
+            if(this.startBinding.hasOwnProperty(type)) {
+                let startUpdate = this.startBinding[type](active);
+                if (typeof(startUpdate) == "string") {
+                    console.log("Angekommen");
+                    this.pCreature = LibCreature.GetCreature(startUpdate, 0, "player");
+                    this.mode = "map";
+                }
+            }
+        }
+        else if (this.mode === "map") {
             if(this.mapBinding.hasOwnProperty(type)) {
-                
                 let mapUpdate = this.mapBinding[type](active);
                 //console.log("mapupdate:" + mapUpdate);
                 console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
                 if (mapUpdate && mapUpdate[0] === "startBattle") {
                     this.mode = "battle";
                     this.timer = 0;
-                    this.battle.setup(this.player, this.playerstats, this.playermoves, mapUpdate[1]);              
+                    this.battle.setup(this.pCreature, mapUpdate[1]);              
                 }
                 else if (mapUpdate && mapUpdate[0] === "healer") {
                     this.heal();              
@@ -102,15 +103,24 @@ export class PetFight extends GameTemplate {
                 "up": (bool) => bool ? this.map.playerMove(0, -1) : false,
                 "down": (bool) => bool ? this.map.playerMove(0, 1) : false,
             };
+            this.startBinding = {  
+                "up": (bool) => this.start.switchEgg(bool,-4, this.mode),
+                "right": (bool) => this.start.switchEgg(bool,3, this.mode),
+                "left": (bool) => this.start.switchEgg(bool,+3, this.mode),
+                "down": (bool) => this.start.switchEgg(bool,4, this.mode),
+                "primary": (bool) => this.start.confirm(bool),
+            };
     }
 
    
     update(ctx) {
         if (this.mode == "battle"){
-           // console.log("Update!");
             this.mode = this.battle.updateBattle(ctx);  // Bekommt Kampfende zurück!
-        } else {
-            console.log(this.mode);
+        } else if  (this.mode === "map") {
+            
+        }
+        else if  (this.mode === "start") {
+            this.start.update(ctx);
         }
     }
     
@@ -118,12 +128,13 @@ export class PetFight extends GameTemplate {
     // Battle (if this.mode == "battle") => this.battle.draw(ctx)!
     draw(ctx) {
         if (this.mode == "battle") {
-            //console.log("Draw!");
             this.battle.draw(ctx);
         }
         else if (this.mode == "map") {
-            //console.log("Auf Karte?!?");
             this.map.draw(ctx);
+        }
+        else if (this.mode == "start") {
+            this.start.draw(ctx);
         }
     }
 
@@ -134,6 +145,11 @@ export class PetFight extends GameTemplate {
     static get MODES() {
         return [
             {
+                NAME:"New Game",
+                parameters: {
+                    "mode": "start",
+                },
+            },{
                 NAME:"battle", 
                 parameters: {
                     "mode": "battle",

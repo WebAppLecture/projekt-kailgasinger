@@ -8,17 +8,19 @@ import { LibCreature } from "../../src/js/LibCreature.js";
 
 export class Battle {
 
-    setup(player, playerstats, playermoves, enemyName) {
+    setup(pCreature, enemyName) {
 
         delete this.eCreature;
         // es existiert ein BattleCreatureObject - da soll alles rein!
-        this.playermoves = playermoves;
-        this.pCreature = new BattleCreature(0,300, 150, 150, "color", "player", player.name, player.sprite, playerstats, playermoves);
-        this.player = player;
+        this.pCreature = pCreature;
+        this.playermoves = this.pCreature.moves;
+        this.player = {name: this.pCreature.name, sprite:this.pCreature.sprite};
+        //this.pCreature = new BattleCreature(0,300, 150, 150, "color", "player", player.name, player.sprite, playerstats, playermoves);
+        
         
         if (!enemyName) {
-            let randCreature = ["Bad Rabbit", "Flameling"];
-            enemyName = randCreature[Math.round(Math.random())];
+            let randCreature = ["Bad Rabbit", "Flameling", "Ashfalom"];
+            enemyName = randCreature[Math.round(Math.random()*(randCreature.length-1))];
         }
         this.eCreature = LibCreature.GetCreature(enemyName, 1);
 
@@ -35,7 +37,7 @@ export class Battle {
     }
 
     ExecAttack() {
-        if (this.timer >= 10 && this.mode == "battle") {
+        if (this.timer >= 10 && this.step == "battle") {
             this.timer = 0;
             this.step = "Anim";
             this.nextStep = "enemy";
@@ -83,11 +85,11 @@ export class Battle {
     }
 
     navMoves(bool, value, mode) {
-        console.log("Modus:"+mode);
+        //console.log("Modus:"+mode);
         if (mode == "battle") {
             this.playermoves.active += value*bool+4;    // Für %-Navigation: Brilliant oder was?
             this.playermoves.active %=4;    //Nach letztem Move von vorn :)
-            console.log(this.playermoves.active);
+            //console.log(this.playermoves.active);
         }
     }
 

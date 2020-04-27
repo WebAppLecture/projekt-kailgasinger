@@ -1,14 +1,16 @@
 
 import { AttackAnim } from "../../src/js/BattleAnim.js";
+import { BasicDrawer } from "../../src/js/BasicDrawer.js";
 
 /*
     Problem in Switch Case mit let count in verschiedenen Cases
 */
 
 
-export class BattleDrawer {
+export class BattleDrawer extends BasicDrawer{
 
     constructor(pCreature, eCreature) {
+        super();
         this.eCreature = eCreature;
         this.pCreature = pCreature;
         this.attackAnims = [];
@@ -16,7 +18,7 @@ export class BattleDrawer {
 
     // All Time Drawer:
     drawBattle(ctx) {
-        this.drawBaground(ctx);
+        this.drawBaground(ctx, this.eCreature.width, this.eCreature.height);
         this.drawMonsters(ctx, this.pCreature, this.eCreature);
         this.drawMovesBackgr(ctx);
         this.drawHealth(ctx, this.pCreature, this.eCreature);
@@ -25,14 +27,19 @@ export class BattleDrawer {
     }
 
     
-    drawBaground(ctx) {
+    drawBaground(ctx, width, height) {
         let image = new Image();
+        /*
+        let image2 = new Image();
+        image2.src = "../../src/images/background/lava_bgr.png";
+        ctx.drawImage(image2, 0, 0, 400, 500);
+        */
         /*
         image.src = "../../src/images/background/bgr_rust.png";
         ctx.drawImage(image, 0, 0, 400, 500);
         */
         image.src = "../../src/images/background/rust_tile.png";
-        ctx.drawImage(image, 212, 110, 227, 74);
+        ctx.drawImage(image, 212/(height/150), 110*height/150, 227*width/150, 74*height/150);
         ctx.drawImage(image, -43, 382, 227, 74);
     }
 
@@ -47,10 +54,6 @@ export class BattleDrawer {
         eCreature.draw(ctx);
         ctx.restore(); // Restore the last saved state
      }
-
-     drawMovesBackgr(ctx) {      // Eine Fn. zum REchteck zeichen (Farbe, Maße)
-        this.drawBox(ctx, "#828C78", -1, 441, ctx.canvas.width, 60);
-    }
 
     drawNames(ctx, pName, eName) {  // AUslagern:P => done!
         // Spieler:
@@ -80,22 +83,6 @@ export class BattleDrawer {
         //Enemy:
         this.drawBox(ctx, "#211D26", 97, 23, 200, 14);
         this.drawBox(ctx, "#1B6BEF", 98+199*(1-this.eCreature.stats.energy/this.eCreature.stats.maxenergy), 24, 199*(this.eCreature.stats.energy/this.eCreature.stats.maxenergy) -1, 12);
-    }
-
-    drawBox(ctx, color, x, y, width, heigth) {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.rect(x, y, width, heigth);
-        ctx.fill();
-    }
-
-    drawString(ctx, color, x, y, string, align="left", baseline="middle", font="16px monospace") {
-        ctx.fillStyle = color;
-
-        ctx.font = font;
-        ctx.textAlign = align;
-        ctx.textBaseline = baseline;
-        ctx.fillText(string, x, y);
     }
 
     drawAnim(move, perform, xStart, yStart, vxStart, vyStart) { // Startwerte auslagern! Switch Case auslagern (insgesamt 3 Funktionen!)
