@@ -1,15 +1,16 @@
 import { BasicDrawer } from "../../src/js/BasicDrawer.js";
+import { CreatureDetails } from "../../src/js/CreatureDetails.js";
+import { LibCreature } from "../../src/js/LibCreature.js";
 
 export class Start extends BasicDrawer {
 
     constructor() {
         super();
         this.eggs = ["aeria", "ignis", "fulgur", "aqua", "terra", "tenebris"];
-        this.creatures = ["Zapderyx", "Flameling", "Thunderwalker", "Sealing", "Rockmaul", "Shadeling"];
-        this.eggC = 0;
+        this.creatures = ["Zapderyx", "Flameling", "Thundersnail", "Sealing", "Rockmaul", "Shadeling"];
         this.activeEgg = -1;
 
-        this.story = ["  Welcome to PetFight!_Press (A) to continue,>", 
+        this.story = ["   Welcome to PetFight!_Press (A) to continue,>", 
                       " Congrats, you pressed (A)!_In PetFight you are going to raise Pets to_let them fight on your behalf. (A)>", 
                       " In order to train pets, you have to collect_and hatch eggs._Let`s look at some eggs I already found for_you!>",
                       " This is a 'Aeria'-Egg0,_a Pet with affinity for the element_Aeria (air) will hatch from it>",
@@ -20,9 +21,12 @@ export class Start extends BasicDrawer {
                       " and 'Tenebris' (darkness)0._Take a good look at them_and choose one carefully!_(Navigate with Arrow-Controls)$"];
                       //I'll give you one of them later"];
         
-        this.progress = 0;
-        this.timer = 1;
-        this.speed = 3;
+        // Set to 0 for new Start!
+        this.progress = 7;
+        this.eggC = 4;
+        // End Cheat Blockw
+        this.timer = 2;
+        this.speed = 1;
         this.lines = 1;
         this.controls = 0;
         this.refreshText();
@@ -34,31 +38,41 @@ export class Start extends BasicDrawer {
 
     update (ctx) {
         this.timer++;
-        if (this.timer%this.speed == 0 && this.timer/this.speed < this.story[this.progress].length) {
-            if (this.story[this.progress][Math.floor(this.timer/this.speed)] == "_") {
-                this.lines +=1;
+        if (this.controls <= 2) {
+            if (this.timer%this.speed == 0 && this.timer/this.speed < this.story[this.progress].length) {
+                if (this.story[this.progress][Math.floor(this.timer/this.speed)] == "_") {
+                    this.lines +=1;
+                }
+                else if (this.story[this.progress][Math.floor(this.timer/this.speed)] == ">") {
+                    this.controls =1;
+                }
+                else if (this.story[this.progress][Math.floor(this.timer/this.speed)] == "0") {
+                    this.eggC++;
+                }
+                else if (this.story[this.progress][Math.floor(this.timer/this.speed)] == "$") {
+                    this.controls = 2;
+                    this.activeEgg = 0;
+                }
+                else {
+                this.text[this.lines] += this.story[this.progress][Math.floor(this.timer/this.speed)];
+                }
             }
-            else if (this.story[this.progress][Math.floor(this.timer/this.speed)] == ">") {
-                this.controls =1;
-            }
-            else if (this.story[this.progress][Math.floor(this.timer/this.speed)] == "0") {
-                this.eggC++;
-            }
-            else if (this.story[this.progress][Math.floor(this.timer/this.speed)] == "$") {
-                this.controls = 2;
-                this.activeEgg = 0;
-            }
-            else {
-            this.text[this.lines] += this.story[this.progress][Math.floor(this.timer/this.speed)];
-            }
+        }
+        else {
+            this.details.update(ctx);
         }
     }
 
     draw(ctx) {
-        this.drawBackground(ctx);
-        this.drawEggs(ctx);
-        this.drawDialogueBox(ctx);
-        this.drawDialogue(ctx, this.lines);
+        if (this.controls <= 2) {
+            this.drawBackground(ctx);
+            this.drawEggs(ctx);
+            this.drawDialogueBox(ctx);
+            this.drawDialogue(ctx, this.lines);
+        }
+        else if( this.controls >= 3) {
+            this.details.draw(ctx, this.timer);
+        }
     }
 
     confirm(bool) {
@@ -71,16 +85,31 @@ export class Start extends BasicDrawer {
             this.lines = 1;
         }
         else if (this.controls == 2) {
-            //this.select();
-            console.log(this.creatures[this.activeEgg]);
-            return this.creatures[this.activeEgg];
+            this.creature = LibCreature.GetCreature(this.creatures[this.activeEgg], 0, "player");        
+            this.details = new CreatureDetails(this.creature, this.eggs[this.activeEgg]);
+            console.log("blub");
+            let ret = [this.creature, this.eggs[this.activeEgg]];
+            return (ret);
+            //this.controls += 1*bool;
+            //this.timer = 0;
+            //this.details.setMode("egg");
         }
-        return false;
-    }
-
-    select() {
-        // set update flag (to return to PetFight)
-        // choose creature
+        else if (this.controls == 3 && this.timer >= 180) {
+            this.controls += 1*bool;
+            this.timer = 0;
+        }
+        else if (this.controls == 4) {
+            this.timer = 0;
+            this.controls += 1;
+            this.details.setMode("hatch");
+            this.details.hatchAnim();
+        }
+        else if (this.controls == 5 &&this.timer >= 60) {
+            console.log(this.creature);
+            return this.creature;
+        }
+        let empty = [];
+        return empty;
     }
 
     switchEgg (bool, value) {
@@ -101,13 +130,6 @@ export class Start extends BasicDrawer {
         image.src = "../../src/images/start_shelf.png";
         ctx.drawImage(image,0,0,400,500);
     }
-
-    /*
-    drawEgg(ctx, i) {
-        let image = new Image();
-        image.src = "../../src/images/eggs/"+this.eggs[i]+".png";
-        ctx.drawImage(image,40+220*(i%2), 35+160*(i%3), 103, 125);
-    }*/
 
     drawEggs(ctx) {
         for (let i=0; i<this.eggC; i++) {

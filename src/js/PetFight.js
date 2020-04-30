@@ -4,6 +4,7 @@ import { Map } from "../../src/js/Map.js";
 import { Start } from "../../src/js/Start.js";
 import { LibCreature } from "../../src/js/LibCreature.js"
 import { BattleCreature } from "../../src/js/BattleCreature.js"
+import { CreatureDetails } from "../../src/js/CreatureDetails.js";
 
 //ToDo:     1) Aktivieren von Move berechnet erst Schaden und verrechnet, wählt dann Gegnermove.
 //          2) Animation für Moves
@@ -18,7 +19,7 @@ export class PetFight extends GameTemplate {
         this.map = new Map(10, 12,); // neue Karte muss hier erstellt werden!
         this.map.start();
         this.battle = new Battle(); // neues Kampfobjekt analog ;)
-
+        this.details = new CreatureDetails();   // Details für Eggs/ Pets/ ...
         // Block für Daten (Stats, Name, ...)
         // Treffquote, Critquote, Dodge, ...
         // Ende Datenblock
@@ -26,10 +27,11 @@ export class PetFight extends GameTemplate {
         if (this.mode === "battle") {
 
             // Direkt Battle
-            this.player = {name: "Bla", sprite: "sealing.png"};
+            //this.player = {name: "Bla", sprite: "zapderyx.png"};
             this.playerstats = {health: 35, maxhealth: 35, energy:30, maxenergy:30, atk: 5, def: 3, spatk: 5, spdef: 4};
             this.playermoves = ["Fireball", "Fiery Breath", "Freeze", "Bite"];
-            this.pCreature = new BattleCreature(0,300, 150, 150, "color", "player", this.player.name, this.player.sprite, this.playerstats, this.playermoves)
+            this.pCreature = LibCreature.GetCreature("Thunderstriker", 0, "player");
+            //this.pCreature = new BattleCreature(0,300, 150, 150, "color", "player", this.player.name, this.player.sprite, this.playerstats, this.playermoves)
             // Ende direkt Battle
 
             this.battle.setup(this.pCreature);
@@ -59,10 +61,12 @@ export class PetFight extends GameTemplate {
         else if (this.mode === "start") {
             if(this.startBinding.hasOwnProperty(type)) {
                 let startUpdate = this.startBinding[type](active);
-                if (typeof(startUpdate) == "string") {
-                    console.log("Angekommen");
-                    this.pCreature = LibCreature.GetCreature(startUpdate, 0, "player");
-                    this.mode = "map";
+                if (typeof(startUpdate[0]) == "object") {
+                    console.log(startUpdate);
+                    this.pCreature = startUpdate[0];
+                    this.details = new CreatureDetails(this.pCreature, startUpdate[1]);
+                    this.details.setMode("egg");
+                    this.mode = "details";
                 }
             }
         }
@@ -73,7 +77,6 @@ export class PetFight extends GameTemplate {
                 console.log("MapUpdates: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
                 if (mapUpdate && mapUpdate[0] === "startBattle") {
                     this.mode = "battle";
-                    this.timer = 0;
                     this.battle.setup(this.pCreature, mapUpdate[1]);              
                 }
                 else if (mapUpdate && mapUpdate[0] === "healer") {
@@ -86,7 +89,12 @@ export class PetFight extends GameTemplate {
                     this.map.start();
                 }
             }
-        }        
+        }    
+        else if (this.mode === "details") {
+            if(this.detailsBinding.hasOwnProperty(type)) {
+                this.mode = this.detailsBinding[type](active);
+            }
+        }    
     }
 
     bindControls() {
@@ -110,6 +118,14 @@ export class PetFight extends GameTemplate {
                 "down": (bool) => this.start.switchEgg(bool,4, this.mode),
                 "primary": (bool) => this.start.confirm(bool),
             };
+            this.detailsBinding = {  
+                //"up": (bool) => this.details.nav(bool,-4, this.mode),
+                //"right": (bool) => this.details.nav(bool,3, this.mode),
+                //"left": (bool) => this.details.nav(bool,+3, this.mode),
+                //"down": (bool) => this.details.nav(bool,4, this.mode),
+                "primary": (bool) => this.details.confirm(bool),
+                "secondary": (bool) => this.details.close(bool),
+            };
     }
 
    
@@ -121,6 +137,9 @@ export class PetFight extends GameTemplate {
         }
         else if  (this.mode === "start") {
             this.start.update(ctx);
+        }
+        else if  (this.mode === "details") {
+           this.mode =  this.details.update(ctx);
         }
     }
     
@@ -136,10 +155,13 @@ export class PetFight extends GameTemplate {
         else if (this.mode == "start") {
             this.start.draw(ctx);
         }
+        else if (this.mode == "details") {
+            this.details.draw(ctx);
+        }
     }
 
     heal() {
-        this.playerstats.health = this.playerstats.maxhealth;
+        this.pCreature.health = this.pCreature.maxhealth;
     }
 
     static get MODES() {

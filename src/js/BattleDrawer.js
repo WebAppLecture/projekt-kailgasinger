@@ -38,7 +38,7 @@ export class BattleDrawer extends BasicDrawer{
         image.src = "../../src/images/background/bgr_rust.png";
         ctx.drawImage(image, 0, 0, 400, 500);
         */
-        image.src = "../../src/images/background/rust_tile.png";
+        image.src = "../../src/images/background/grass_tile.png";
         ctx.drawImage(image, 212/(height/150), 110*height/150, 227*width/150, 74*height/150);
         ctx.drawImage(image, -43, 382, 227, 74);
     }
@@ -104,7 +104,7 @@ export class BattleDrawer extends BasicDrawer{
             case "Freeze":
                 let counter = Math.round(12*perform);
                 for (let i = 0; i<=counter; i++) {
-                    this.attackAnims.push( new AttackAnim(xStart+55*Math.random(), yStart-50+45*Math.random(), 6+counter/4*i, 6+counter/4*i, "rgba("+130+Math.random()*80+","+(80+Math.random()*30)+", 16,"+(0.5+Math.random()*0.5)+")", vxStart*1.5+Math.random(), 3*vyStart+Math.random(), "freeze.png", "Freeze", vxStart, vyStart));
+                    this.attackAnims.push( new AttackAnim(xStart+55*Math.random(), yStart-50+45*Math.random(), 6+counter/4*i, 6+counter/4*i, "rgba("+130+Math.random()*80+","+(80+Math.random()*30)+", 16,"+(0.5+Math.random()*0.5)+")", vxStart*1.5+Math.random(), 3*vyStart+Math.random(), "/attacks/freeze.png", "Freeze", vxStart, vyStart));
                     //console.log( new AttackAnim(xStart+15*Math.random(), yStart+15*Math.random(), 10, 10, "rgba("+130+Math.random()*80+","+(80+Math.random()*30)+", 16,"+(0.5+Math.random()*0.5)+")", vxStart*2.25+Math.random(), 3.8*vyStart+Math.random(), "freeze.png", "Freeze", vxStart, vyStart));
                 }
            break;

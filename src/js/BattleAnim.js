@@ -57,19 +57,19 @@ export class AttackAnim extends MovableSpriteObject {
             break;
         }
     }
+}
 
-    /*
-    update(ctx) {
-        this.x += this.vx;
-        this.y += this.vy;
-        if(GameObject.rectangleCollision(this, BattleCreature)) {   // && this.lifetime >= 100
-            this.vx = 0;
-            this.vy = 0;
-            console.log("Zeit:"+this.lifetime);
-        }
-        else {
-            this.lifetime++;
-        }
-    }   */
+export class EggSparkAnim extends AttackAnim {
+
+    constructor(x, y, width, height, color, vx, vy, sprite="none", type="default", vxStart, vyStart) {
+        super(x, y, width, height, color, vx, vy, sprite="none", type="default", vxStart, vyStart);
+        this.lifetime = 0;
+    }
+
+    randomize() {
+        let rand = Math.random();
+        this.vx *= (1+rand/5);
+        this.vy *= (1+rand/5);
+    }
 
 }

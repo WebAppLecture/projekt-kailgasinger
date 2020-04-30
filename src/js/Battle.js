@@ -19,7 +19,7 @@ export class Battle {
         
         
         if (!enemyName) {
-            let randCreature = ["Bad Rabbit", "Flameling", "Ashfalom"];
+            let randCreature = ["Bad Rabbit", "Thunderstriker", "Zapderyx", "Flameling", "Ashfalom"];
             enemyName = randCreature[Math.round(Math.random()*(randCreature.length-1))];
         }
         this.eCreature = LibCreature.GetCreature(enemyName, 1);
