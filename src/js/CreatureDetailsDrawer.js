@@ -8,6 +8,7 @@ export class CreatureDetailsDrawer extends BasicDrawer {
         super();
         this.pCreature = pCreature;
         this.egg = new MovableSpriteObject(-51.5, -115, 95, 125, "", 0, 0, "../../src/images/eggs/"+egg+".png");
+        this.active = 0;
         //
     }
 
@@ -41,20 +42,36 @@ export class CreatureDetailsDrawer extends BasicDrawer {
         ctx.translate(-200, -270);
     }
 
-    drawCreatureStats(ctx) {
-        this.drawBox(ctx, "rgba(130, 140, 120, 0.8)", 0, 340, 400, 240);
-        this.drawString(ctx, "#000000", 150, 350, this.pCreature.name+"'s stats:", "middle");
+    drawCreatureInfo(ctx) {
+        this.drawBox(ctx, "rgba(130, 140, 120, 0.8)", 0, 340, 400, 240);    // Big Box
+        this.drawBox(ctx, "rgba(120, 120, 90, 0.8)", 0, 395, 145, 240);    // Stats Box
+        this.drawBox(ctx, "rgba(160, 150, 110, 0.8)", 150, 395, 250, 240);    // Moves Box
+        this.drawBox(ctx, "rgba(140, 120, 100, 0.8)", 150, 430, 250, 240);    // MovesDesc Box
+        this.drawString(ctx, "#000000", 140, 350, this.pCreature.name+"'s stats:", "middle");
         this.drawString(ctx, "#000000", 5, 370, "Health: "+this.pCreature.stats.health+"/"+this.pCreature.stats.maxhealth, "middle");
         // für draw_health eine neue Fn (damit in Battle und details)!
-        this.drawBox(ctx, "#C81D1A", 125, 363, 200, 14); //Maxhealth
-        this.drawBox(ctx, "#25DE0F", 126, 364, 199*(this.pCreature.stats.health/this.pCreature.stats.maxhealth) -1, 12);
-        this.drawString(ctx, "#000000", 5, 385, "Energy: "+this.pCreature.stats.energy+"/"+this.pCreature.stats.maxenergy, "middle");
-        this.drawString(ctx, "#000000", 5, 400, "Attack Power: "+this.pCreature.stats.atk, "middle");
-        this.drawString(ctx, "#000000", 5, 415, "Defense: "+this.pCreature.stats.def, "middle");
-        this.drawString(ctx, "#000000", 5, 430, "Special Att. Power: "+this.pCreature.stats.spatk, "middle");
-        this.drawString(ctx, "#000000", 5, 445, "Special Def.: "+this.pCreature.stats.spdef, "middle");
-        console.log(this.pCreature);
+        this.drawHealth(ctx, this.pCreature, null, "details");
+        this.drawString(ctx, "#000000", 5, 386, "Energy: "+this.pCreature.stats.energy+"/"+this.pCreature.stats.maxenergy, "middle");
+        this.drawEnergy(ctx, this.pCreature, null, "details");
+
+        this.drawCreatureStats(ctx, 5, 405);
+        this.drawMoves(ctx, this.pCreature.moves, this.active, 275, 405, 14);
+        this.drawMoveDesc(ctx, this.pCreature.moves, this.active, 155, 455);
     }
+
+    drawCreatureStats(ctx, xStart, yStart) {
+        let dist = 125;
+        this.drawString(ctx, "#000000", xStart, yStart, "Attack Power: ");
+        this.drawString(ctx, "#000099", xStart+dist, yStart, this.pCreature.stats.atk);
+        this.drawString(ctx, "#000000", xStart, yStart+16, "Defense: ");
+        this.drawString(ctx, "#000099", xStart+dist, yStart+16, this.pCreature.stats.def);
+        this.drawString(ctx, "#000000", xStart, yStart+32, "Special Att.: ");
+        this.drawString(ctx, "#000099", xStart+dist, yStart+32, this.pCreature.stats.spatk);
+        this.drawString(ctx, "#000000", xStart, yStart+48, "Special Def.: ");
+        this.drawString(ctx, "#000099", xStart+dist, yStart+48, this.pCreature.stats.spdef);
+    }
+
+
 
     drawCreature(ctx) {
         let image = new Image();

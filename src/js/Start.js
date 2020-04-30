@@ -90,9 +90,11 @@ export class Start extends BasicDrawer {
             console.log("blub");
             let ret = [this.creature, this.eggs[this.activeEgg]];
             return (ret);
+        }
             //this.controls += 1*bool;
             //this.timer = 0;
             //this.details.setMode("egg");
+            /*
         }
         else if (this.controls == 3 && this.timer >= 180) {
             this.controls += 1*bool;
@@ -108,6 +110,7 @@ export class Start extends BasicDrawer {
             console.log(this.creature);
             return this.creature;
         }
+        */
         let empty = [];
         return empty;
     }
@@ -117,6 +120,8 @@ export class Start extends BasicDrawer {
             this.activeEgg += value*bool+6;    // Für %-Navigation: Brilliant oder was?
             this.activeEgg %=6;    //Nach letztem Move von vorn :)
         }
+        let empty = [];
+        return empty;
     }
 
     drawDialogue(ctx, lines) {
@@ -137,6 +142,7 @@ export class Start extends BasicDrawer {
             let egg = this.eggs[i];
             if (this.activeEgg == i) {
                 egg += "_sel";
+                this.drawString(ctx, "#000000", 40+220*(i%2), 165*(i%3)+12, this.eggs[i].toUpperCase(), "", "", "20px monospace");
             }
             image.src = "../../src/images/eggs/"+egg+".png";
             ctx.drawImage(image,40+220*(i%2), 35+160*(i%3), 103, 125);

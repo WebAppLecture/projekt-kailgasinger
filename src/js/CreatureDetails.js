@@ -12,6 +12,8 @@ export class CreatureDetails {
         this.Anims = [];
         this.progress = 0;
         this.timer = 0;
+        this.playermoves = [];
+        this.playermoves.active = 0;
     }
 
     setCreature(pCreature) {
@@ -28,6 +30,13 @@ export class CreatureDetails {
             this.progress += 1*bool;
             console.log(this.progress);
         }
+        return "details";
+    }
+
+    nav(bool, value) {
+        this.drawer.active += value*bool+4;    // Für %-Navigation: Brilliant oder was?
+        this.drawer.active %=4;    //Nach letztem Move von vorn :)
+        //console.log(this.playermoves.active);
         return "details";
     }
 
@@ -60,7 +69,7 @@ export class CreatureDetails {
         else if (this.mode == "creature") {
             this.drawer.drawCreature(ctx);
             this.drawer.drawString(ctx, "#000000", 100, 110, "Return to map? (B)", "middle", "middle", "16px monospace");
-            this.drawer.drawCreatureStats(ctx);
+            this.drawer.drawCreatureInfo(ctx);
         }
     }
 

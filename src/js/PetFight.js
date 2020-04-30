@@ -119,10 +119,10 @@ export class PetFight extends GameTemplate {
                 "primary": (bool) => this.start.confirm(bool),
             };
             this.detailsBinding = {  
-                //"up": (bool) => this.details.nav(bool,-4, this.mode),
-                //"right": (bool) => this.details.nav(bool,3, this.mode),
-                //"left": (bool) => this.details.nav(bool,+3, this.mode),
-                //"down": (bool) => this.details.nav(bool,4, this.mode),
+                "up": (bool) => this.details.nav(bool,-2, this.mode),
+                "right": (bool) => this.details.nav(bool,1, this.mode),
+                "left": (bool) => this.details.nav(bool,-1, this.mode),
+                "down": (bool) => this.details.nav(bool,2, this.mode),
                 "primary": (bool) => this.details.confirm(bool),
                 "secondary": (bool) => this.details.close(bool),
             };

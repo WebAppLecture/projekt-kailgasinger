@@ -21,68 +21,32 @@ export class BattleDrawer extends BasicDrawer{
         this.drawBaground(ctx, this.eCreature.width, this.eCreature.height);
         this.drawMonsters(ctx, this.pCreature, this.eCreature);
         this.drawMovesBackgr(ctx);
-        this.drawHealth(ctx, this.pCreature, this.eCreature);
-        this.drawEnergy(ctx);
+        this.drawHealth(ctx, this.pCreature, this.eCreature, "battle");
+        this.drawEnergy(ctx, this.pCreature, this.eCreature, "battle");
         this.drawNames(ctx, this.pCreature.name, this.eCreature.name);
     }
 
     
     drawBaground(ctx, width, height) {
         let image = new Image();
-        /*
-        let image2 = new Image();
-        image2.src = "../../src/images/background/lava_bgr.png";
-        ctx.drawImage(image2, 0, 0, 400, 500);
-        */
-        /*
-        image.src = "../../src/images/background/bgr_rust.png";
-        ctx.drawImage(image, 0, 0, 400, 500);
-        */
         image.src = "../../src/images/background/grass_tile.png";
         ctx.drawImage(image, 212/(height/150), 110*height/150, 227*width/150, 74*height/150);
         ctx.drawImage(image, -43, 382, 227, 74);
     }
 
     drawMonsters(ctx, pCreature, eCreature) {
-        /*ctx.save(); // Save the current state
-        ctx.scale(-1, 1); // Set scale to flip the image
-        // Set x position to -100% if flip horizontal 
-        pCreature.x *= -1;
-        pCreature.x +=100;
-        eCreature.x *= -1;*/
         pCreature.draw(ctx);
         eCreature.draw(ctx);
-        ctx.restore(); // Restore the last saved state
      }
 
     drawNames(ctx, pName, eName) {  // AUslagern:P => done!
         // Spieler:
-        this.drawBox(ctx, "#828C78", -1, 410, 100, 29);
+        this.drawBox(ctx, "#828C78", -1, 410, 140, 29);
         this.drawString(ctx, "#000000", 10, 425, pName);
 
         // Gegner:
-        this.drawBox(ctx, "#828C78", 300, 8, 100, 29);
-        this.drawString(ctx, "#000000", 310, 20, eName);
-    }
-
-    drawHealth(ctx,pCreature, eCreature) {
-        //Spieler:
-        this.drawBox(ctx, "#C81D1A", 101, 410, 200, 14); //Maxhealth
-        this.drawBox(ctx, "#25DE0F", 102, 411, 199*(pCreature.stats.health/pCreature.stats.maxhealth) -1, 12);
-
-        //Enemy:
-        this.drawBox(ctx, "#C81D1A", 97, 8, 200, 14);
-        this.drawBox(ctx, "#25DE0F", 98+199*(1-eCreature.stats.health/eCreature.stats.maxhealth), 9, 199*(eCreature.stats.health/eCreature.stats.maxhealth) -1, 12); 
-    }
-
-    drawEnergy(ctx) {
-        //Spieler:
-        this.drawBox(ctx, "#211D26", 101, 425, 200, 14); //MaxEn
-        this.drawBox(ctx, "#1B6BEF", 102, 426, 199*(this.pCreature.stats.energy/this.pCreature.stats.maxenergy) -1, 12);
-
-        //Enemy:
-        this.drawBox(ctx, "#211D26", 97, 23, 200, 14);
-        this.drawBox(ctx, "#1B6BEF", 98+199*(1-this.eCreature.stats.energy/this.eCreature.stats.maxenergy), 24, 199*(this.eCreature.stats.energy/this.eCreature.stats.maxenergy) -1, 12);
+        this.drawBox(ctx, "#828C78", 260, 8, 140, 29);
+        this.drawString(ctx, "#000000", 265, 20, eName);
     }
 
     drawAnim(move, perform, xStart, yStart, vxStart, vyStart) { // Startwerte auslagern! Switch Case auslagern (insgesamt 3 Funktionen!)

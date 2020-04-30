@@ -17,7 +17,7 @@ export class LibCreature {
             //this.sprite = this.folder+"/"+name.toLowerCase(); //+"_player.png";
             switch (name) {
                 case "Bad Rabbit":
-                    name = "bad_rabbit";
+                    this.sprite = "bad_rabbit";
                     this.folder = "";
                     this.health = Math.round(20 + 5*rand);
                     this.energy = Math.round(20 + 5*rand);
@@ -74,7 +74,9 @@ export class LibCreature {
                     this.width = 200;
                 break;
             }
-            this.sprite = this.folder+"/"+name.toLowerCase();
+            if (!this.sprite) {
+                this.sprite = this.folder+"/"+name.toLowerCase();
+            }
         }
         else {  //Starter/ Spieler
             // Exp.-Wiese für verallgemeinertes System
