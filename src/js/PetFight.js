@@ -81,8 +81,11 @@ export class PetFight extends GameTemplate {
         if(this.mode === "MapMenu"){
             if(this.menuBinding.hasOwnProperty(type)) {
                 let mapUpdate = this.menuBinding[type](active);
-                if (mapUpdate && mapUpdate[0] === "map"){
-                    this.mode = "map";
+                if (mapUpdate){
+                    this.mode = mapUpdate[0];
+                    if (mapUpdate[0] == "details") {
+                        this.details.mode = "creature";
+                    }
                 }
             }
         }
@@ -137,7 +140,7 @@ export class PetFight extends GameTemplate {
                 "right": (bool) => this.MapMenu.navMenu(bool,1, this.mode),
                 "left": (bool) => this.MapMenu.navMenu(bool,-1, this.mode),
                 "down": (bool) => this.MapMenu.navMenu(bool,2, this.mode),
-                "primary": (bool) => this.MapMenu.selectMenuObject(),
+                "primary": (bool) => this.MapMenu.selectMenuObject(bool),
                 //"secondary": (bool) => this.MapMenu.closeMapMenu(),
             };
             this.startBinding = {  
@@ -182,6 +185,7 @@ export class PetFight extends GameTemplate {
             this.map.draw(ctx);
         }
         else if (this.mode === "MapMenu") {
+            this.map.draw(ctx);
             this.MapMenu.draw(ctx);
         }
         else if (this.mode === "start") {

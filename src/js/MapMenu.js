@@ -4,37 +4,29 @@ import { BasicDrawer } from "../../src/js/BasicDrawer.js";
 export class MapMenu extends BasicDrawer{
     constructor() {
         super();
-        this.MenuPoints = ["eins", "zwei", "drei", "back to map"];
+        this.MenuPoints = ["Pet Status", "zwei", "drei", "back to map"];
         this.MenuPoints.active = 0;
     }
     start(){
         console.log("jetzt im Menu");
     }
-    selectMenuObject(){
+    selectMenuObject(bool){
         let mapUpdate = [];
-        //console.log(this.MenuPoints[this.MenuPoints.active])
-        //console.log("MapUpdates im MapMenu: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3]);
+        if (bool == null) {
+            return null;
+        }
         switch(this.MenuPoints[this.MenuPoints.active]){
             case "back to map":  {
-                console.log("jetzt case")
                 mapUpdate[0] = "map";
-                // mapUpdate[1] = 12;//newPlayeri;
-                // mapUpdate[2] = 12;//newPlayerj;
-                // mapUpdate[3] = 0;//this.currentMapx;
-                // mapUpdate[4] = 0;//this.currentMapy;
-                console.log("MapUpdates im Case: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3] + " [5], " + mapUpdate[4]);
+                return mapUpdate;
+            }
+            case "Pet Status": {
+                mapUpdate[0] = "details";
                 return mapUpdate;
             }
         }
 
     }
-
-    // openMapMenu(){
-    //     let mapUpdate = [];
-    //     this.Map.openMenu();
-    //     console.log("MapUpdates im Mapmenu: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3] + " [5], " + mapUpdate[4]);
-                
-    // }
 
     navMenu(bool, value, mode) {
         //console.log("Modus:"+mode);
@@ -45,6 +37,7 @@ export class MapMenu extends BasicDrawer{
         }
     }
     drawMapMenu(ctx) {
+        this.drawBox(ctx, "rgba(170, 160, 120, 0.85)",0 , 440, 400, 480);    // Moves Box
         for (let x in this.MenuPoints) {
             let color = "#000000";
             if (this.MenuPoints.active == x) {

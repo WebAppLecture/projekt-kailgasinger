@@ -41,7 +41,7 @@ export class CreatureDetails {
     }
 
     close(bool) {
-        if (this.mode == "creature") {
+        if (this.mode == "creature" && bool != null) {
             return "map";
         }
         else {

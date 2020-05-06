@@ -200,9 +200,10 @@ export class Map {
             let mapUpdate = [];
             switch(targetField.type){
                 case "fight": {
-                    
                     mapUpdate[0] = "startBattle";
                     mapUpdate[1] = this.entities[newPlayeri][newPlayerj].content.name;
+                    this.entities[newPlayeri][newPlayerj].content = null;
+                    //this.allMaps[this.currentMapx][this.currentMapy][newPlayeri][newPlayerj]="_";
                     return mapUpdate;
                 }
                 case "east": {
