@@ -1,4 +1,4 @@
-
+//import {Player, Tree, Mountain, Water} from "../../src/js/Mapobjects.js";
 
 export class Map {
     constructor(playerPosx, playerPosy, currentMapx, currentMapy){
@@ -12,7 +12,7 @@ export class Map {
         this.size = 20; 
         this.maplengthx = 19;
         this.maplengthy = 24;
-        console.log("aktuelle Map nach start():" + this.currentMapx + "/" + this.currentMapy);
+        //console.log("aktuelle Map nach start():" + this.currentMapx + "/" + this.currentMapy);
        
         this.colors = {nextMap:"#20860D", mountain:"#180b1d", tree:"#02402f", fight:"#601815", water:"#0E69FB", healer:"#FFFFFF"};
         if (!this.currentMapx){
@@ -250,6 +250,17 @@ export class Map {
         }
         return false;
     }
+    openMapMenu(){
+        let mapUpdate = [];
+        mapUpdate[0] = "MapMenu";
+        mapUpdate[1] = this.player.i;
+        mapUpdate[2] = this.player.j;
+        mapUpdate[3] = this.currentMapx;
+        mapUpdate[4] = this.currentMapy;
+        //console.log("MapUpdates in Map OpenMenu: [1], " + mapUpdate[0] + " [2], " + mapUpdate[1] + " [3], "+ mapUpdate[2] + " [4], " + mapUpdate[3] + " [5], " + mapUpdate[4]);
+        return mapUpdate; 
+
+    }
 
     draw(ctx){
         this.player.draw(ctx);
@@ -294,6 +305,7 @@ export class MapObject{
     }  
 
 }
+
 export class Mountain extends MapObject{
     draw(ctx, i, j, size){
         ctx.shadowBlur = 0;
@@ -406,3 +418,5 @@ export class Player extends MapObject{
     }
 
 }
+
+
