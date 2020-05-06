@@ -56,7 +56,7 @@ export class BattleCreature extends GameObject {
                 break;
             }
             let image = new Image();
-            image.src = "../../src/images/creatures/"+this.sprite;
+            image.src = "../../src/images/creatures/"+this.sprite+"_"+this.type+".png";
             /*ctx.save(); // Save the current state
             ctx.scale(-1, 1); // Set scale to flip the image
             this.x *=-1;*/
