@@ -19,7 +19,7 @@ export class Battle {
         
         
         if (!enemyName) {
-            let randCreature = ["Bad Rabbit", "Flameling", "Ashfalom"];
+            let randCreature = ["Bad Rabbit", "Thunderstriker", "Zapderyx", "Flameling", "Ashfalom"];
             enemyName = randCreature[Math.round(Math.random()*(randCreature.length-1))];
         }
         this.eCreature = LibCreature.GetCreature(enemyName, 1);
@@ -77,7 +77,7 @@ export class Battle {
         this.drawer.drawBattle(ctx);
 
         if (this.step === "battle") {
-            this.drawMoves(ctx);
+            this.drawer.drawMoves(ctx, this.playermoves, this.playermoves.active, 125, 455);
         }
         else if (this.step == "Anim")  {
             this.drawCombatLog(ctx, this.nextStep);
@@ -161,23 +161,6 @@ export class Battle {
             this.drawer.attackAnims[x].draw(ctx);
         }
     }
-
-    drawMovesMenu(ctx) {
-        for (let x in this.playermoves) {
-            let color = "#000000";
-            if (this.playermoves.active == x) {
-                color = "#49D615"
-            }
-            let y = Math.round(x/2-0.1);
-            this.drawer.drawString(ctx, color, 125+120*(x%2 -1), 455+(y%2)*15, this.playermoves[x])
-        }
-    }
-
-    drawMoves(ctx) {
-        this.drawMovesMenu(ctx);
-    }
-
-
 
     //getter:
     getDmgText(val) {
