@@ -114,8 +114,7 @@ export class LibCreature {
                     this.height = 150;
                     this.width = 175;
                 break;
-                case "Rockmaul":
-                    this.sprite = "rockmaul.png";
+                case "Earthmaul":
                     this.health = 25 + 10*rand;
                     this.energy = 20 + 5*rand;
                     this.stats = {health: this.health, maxhealth: this.health, energy: this.energy, maxenergy: this.energy, atk: 3, def: 3, spatk: 2, spdef: 4};

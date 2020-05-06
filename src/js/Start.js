@@ -7,7 +7,7 @@ export class Start extends BasicDrawer {
     constructor() {
         super();
         this.eggs = ["aeria", "ignis", "fulgur", "aqua", "terra", "tenebris"];
-        this.creatures = ["Zapderyx", "Flameling", "Thundersnail", "Sealing", "Rockmaul", "Shadeling"];
+        this.creatures = ["Zapderyx", "Flameling", "Thundersnail", "Sealing", "Earthmaul", "Shadeling"];
         this.activeEgg = -1;
 
         this.story = ["   Welcome to PetFight!_Press (A) to continue,>", 
