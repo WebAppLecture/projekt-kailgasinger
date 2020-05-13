@@ -41,7 +41,8 @@ export class MapMenu extends BasicDrawer{
         }
     }
     drawMapMenu(ctx) {
-        this.drawBox(ctx, "rgba(170, 160, 120, 0.85)",0 , 440, 400, 480);    // Moves Box
+        //rgba(200, 214, 229,1.0) rgba(87, 101, 116,1.0)
+        this.drawBox(ctx, "rgba(87, 101, 116, 0.85)",0 , 440, 400, 480);    // Moves Box
         for (let x in this.MenuPoints) {
             let color = "#000000";
             if (this.MenuPoints.active == x) {
