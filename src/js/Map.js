@@ -7,6 +7,10 @@ export class Map {
         this.currentMapx = currentMapx; // Position der aktuellen Map im Map Array allMaps
         this.currentMapy = currentMapy;
     }
+    // startMiniMap(){
+    //     this.size = 2;
+
+    // }
 
     start() {
         this.size = 20; 
@@ -267,6 +271,21 @@ export class Map {
         this.player.draw(ctx);
         this.drawEntities(ctx);
     }
+
+    // drawMiniMap(ctx){
+    //     this.player.draw(ctx);
+    //     this.drawEntitiesMiniMap(ctx);
+    // }
+
+    // drawEntitiesMiniMap(ctx) {
+    //     for (let i in this.entities) {
+    //         for (let j in this.entities[i]){ 
+    //             if (this.entities[i][j].content) {         
+    //                 this.entities[i][j].content.draw(ctx, i, j, this.miniMapSize);
+    //             }
+    //         }
+    //     }
+    // }
 
     drawEntities(ctx) {
         for (let i in this.entities) {

@@ -21,6 +21,7 @@ export class PetFight extends GameTemplate {
         this.battle = new Battle(); // neues Kampfobjekt analog ;)
         this.MapMenu = new MapMenu();
         this.details = new CreatureDetails();   // Details für Eggs/ Pets/ ...
+        this.miniMap = new Map();
       
         // Block für Daten (Stats, Name, ...)
         // Treffquote, Critquote, Dodge, ...
@@ -46,8 +47,6 @@ export class PetFight extends GameTemplate {
         }
         else if (this.mode === "MapMenu") {
             this.MapMenu.start();
-            
-            console.log("jetzt ins Mapmenü")
         }
         else if (this.mode === "start") {
             this.start = new Start();
@@ -83,7 +82,7 @@ export class PetFight extends GameTemplate {
                 let mapUpdate = this.menuBinding[type](active);
                 if (mapUpdate){
                     this.mode = mapUpdate[0];
-                    if (mapUpdate[0] == "details") {
+                    if (mapUpdate[0] === "details") {
                         this.details.mode = "creature";
                     }
                 }
@@ -113,7 +112,10 @@ export class PetFight extends GameTemplate {
             if(this.detailsBinding.hasOwnProperty(type)) {
                 this.mode = this.detailsBinding[type](active);
             }
-        }    
+        } 
+        // else if (this.mode === "miniMap") {
+        //     this.map.startMiniMap();
+        // }
     }
 
     bindControls() {
@@ -188,10 +190,15 @@ export class PetFight extends GameTemplate {
             this.map.draw(ctx);
             this.MapMenu.draw(ctx);
         }
+        // else if (this.mode === "miniMap") {
+        //     this.map.draw(ctx);
+        //     this.MapMenu.draw(ctx);
+        //     this.miniMap.drawMiniMap(ctx);
+        //}
         else if (this.mode === "start") {
             this.start.draw(ctx);
         }
-        else if (this.mode == "details") {
+        else if (this.mode === "details") {
             this.details.draw(ctx);
         }
     }
