@@ -9,7 +9,6 @@ export class CreatureDetailsDrawer extends BasicDrawer {
         this.pCreature = pCreature;
         this.egg = new MovableSpriteObject(-51.5, -115, 95, 125, "", 0, 0, "../../src/images/eggs/"+egg+".png");
         this.active = 0;
-        //
     }
 
     clearScreen(ctx) { //übermalt Canvas
@@ -49,7 +48,8 @@ export class CreatureDetailsDrawer extends BasicDrawer {
         this.drawBox(ctx, "rgba(140, 120, 100, 0.8)", 150, 430, 250, 240);    // MovesDesc Box
         this.drawString(ctx, "#000000", 140, 350, this.pCreature.name+"'s stats:", "middle");
         this.drawString(ctx, "#000000", 5, 370, "Health: "+this.pCreature.stats.health+"/"+this.pCreature.stats.maxhealth, "middle");
-        // für draw_health eine neue Fn (damit in Battle und details)!
+
+        // für draw_health eine neue Fn (damit in Battle und details) - realisiert!
         this.drawHealth(ctx, this.pCreature, null, "details");
         this.drawString(ctx, "#000000", 5, 386, "Energy: "+this.pCreature.stats.energy+"/"+this.pCreature.stats.maxenergy, "middle");
         this.drawEnergy(ctx, this.pCreature, null, "details");

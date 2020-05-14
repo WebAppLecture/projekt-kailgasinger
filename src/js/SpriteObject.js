@@ -1,5 +1,5 @@
 
-import { GameObject, MovableGameObject, Ball, Mode } from "../../vendor/gamebox/src/js/GameObject.js";
+import { GameObject, MovableGameObject } from "../../vendor/gamebox/src/js/GameObject.js";
 
 export class MovableSpriteObject extends MovableGameObject {
 

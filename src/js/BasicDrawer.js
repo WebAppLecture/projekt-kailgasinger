@@ -6,18 +6,18 @@ export class BasicDrawer {
         this.drawBox(ctx, "#828C78", 0, 440, ctx.canvas.width, 60);
     }
 
-    drawDialogueBox(ctx) {
+    drawDialogueBox(ctx) {      // Dialogbox, falls man noch weitere Dialoge/ Story hinzufügen würde.
         this.drawBox(ctx, "rgba(130, 140, 120, 0.8)", 0, 420, ctx.canvas.width, 80);
     }
 
-    drawBox(ctx, color, x, y, width, heigth) {
+    drawBox(ctx, color, x, y, width, heigth) {  // Zeichnet Rechtecke, mit einer FN.
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.rect(x, y, width, heigth);
         ctx.fill();
     }
     
-    drawString(ctx, color, x, y, string, align="left", baseline="middle", font="16px monospace") {
+    drawString(ctx, color, x, y, string, align="left", baseline="middle", font="16px monospace") {  //String-Zeichnen mit Vorgabeparameter.
         ctx.fillStyle = color;
         ctx.font = font;
         ctx.textAlign = align;
