@@ -21,11 +21,15 @@ export class Start extends BasicDrawer {
                       " and 'Tenebris' (darkness)0._Take a good look at them_and choose one carefully!_(Navigate with Arrow-Controls)$"];
                       //I'll give you one of them later"];
         
-        // Set to 0 for new Start!
-        this.progress = 7;
-        this.eggC = 4;
+        // Set to 0 for new Start, highger values let you skip Story!
+        this.progress = 0;
+        this.eggC = 0;
         // End Cheat Blockw
+
+        // Text-Speed ;) - langfristig sollte der User den setzen können ;)
         this.timer = 2;
+        //
+
         this.speed = 1;
         this.lines = 1;
         this.controls = 0;
@@ -91,26 +95,7 @@ export class Start extends BasicDrawer {
             let ret = [this.creature, this.eggs[this.activeEgg]];
             return (ret);
         }
-            //this.controls += 1*bool;
-            //this.timer = 0;
-            //this.details.setMode("egg");
-            /*
-        }
-        else if (this.controls == 3 && this.timer >= 180) {
-            this.controls += 1*bool;
-            this.timer = 0;
-        }
-        else if (this.controls == 4) {
-            this.timer = 0;
-            this.controls += 1;
-            this.details.setMode("hatch");
-            this.details.hatchAnim();
-        }
-        else if (this.controls == 5 &&this.timer >= 60) {
-            console.log(this.creature);
-            return this.creature;
-        }
-        */
+
         let empty = [];
         return empty;
     }

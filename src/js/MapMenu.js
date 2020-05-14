@@ -1,4 +1,4 @@
-//import {Menu} from "../../vendor/gamebox/src/js/Menu.js";
+
 import { BasicDrawer } from "../../src/js/BasicDrawer.js";
 
 export class MapMenu extends BasicDrawer{
@@ -29,15 +29,12 @@ export class MapMenu extends BasicDrawer{
     }
 
     navMenu(bool, value, mode) {
-        //console.log("Modus:"+mode);
         if (mode == "MapMenu") {
             this.MenuPoints.active += value*bool+4;    // Für %-Navigation: Brilliant oder was?
             this.MenuPoints.active %=4;    //Nach letztem Move von vorn :)
-            //console.log(this.MenuPoints.active);
         }
     }
     drawMapMenu(ctx) {
-        //rgba(200, 214, 229,1.0) rgba(87, 101, 116,1.0)
         this.drawBox(ctx, "rgba(87, 101, 116, 0.85)",0 , 440, 400, 480);    // Moves Box
         for (let x in this.MenuPoints) {
             let color = "#000000";

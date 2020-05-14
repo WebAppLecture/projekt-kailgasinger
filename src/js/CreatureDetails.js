@@ -1,6 +1,8 @@
-
 import { CreatureDetailsDrawer } from "../../src/js/CreatureDetailsDrawer.js";
 import { EggSparkAnim } from "../../src/js/BattleAnim.js";
+
+
+// In diesem File kann man noch einiges verbessern! Aber für uns hat es soweit gereicht.
 
 export class CreatureDetails {
 
@@ -36,7 +38,6 @@ export class CreatureDetails {
     nav(bool, value) {
         this.drawer.active += value*bool+4;    // Für %-Navigation: Brilliant oder was?
         this.drawer.active %=4;    //Nach letztem Move von vorn :)
-        //console.log(this.playermoves.active);
         return "details";
     }
 

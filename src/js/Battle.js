@@ -1,8 +1,4 @@
-import { GameTemplate } from "../../vendor/gamebox/src/js/games/GameTemplate.js";
-import { Menu } from "../../vendor/gamebox/src/js/Menu.js";
-import { GameObject, MovableGameObject, Ball, Mode } from "../../vendor/gamebox/src/js/GameObject.js";
 import { BattleDrawer } from "../../src/js/BattleDrawer.js";
-import { BattleCreature } from "./BattleCreature.js";
 import { LibMove } from "../../src/js/LibMove.js";
 import { LibCreature } from "../../src/js/LibCreature.js"; 
 
@@ -10,18 +6,18 @@ export class Battle {
 
     setup(pCreature, enemyName) {
 
-        delete this.eCreature;
-        // es existiert ein BattleCreatureObject - da soll alles rein!
+        delete this.eCreature;  // del old creature, check for new
         this.pCreature = pCreature;
         this.playermoves = this.pCreature.moves;
         this.player = {name: this.pCreature.name, sprite:this.pCreature.sprite};
-        //this.pCreature = new BattleCreature(0,300, 150, 150, "color", "player", player.name, player.sprite, playerstats, playermoves);
         
         
+        // Randomisation for Testbattles
         if (!enemyName) {
             let randCreature = ["Bad Rabbit", "Thunderstriker", "Zapderyx", "Flameling", "Ashfalom"];
             enemyName = randCreature[Math.round(Math.random()*(randCreature.length-1))];
         }
+
         this.eCreature = LibCreature.GetCreature(enemyName, 1);
 
         this.playermoves.active = 0;
@@ -32,7 +28,6 @@ export class Battle {
 
         this.mode = "battle";
         this.step = "battle";
-        //this.nextStep = "enemy";
         this.timer = 0;
     }
 
@@ -46,7 +41,7 @@ export class Battle {
     }   
 
     updateBattle(ctx) {
-        ctx.fillText("Debug M: "+this.mode+",Step:"+this.step+" Timer: "+this.timer, 10, 45);
+        //ctx.fillText("Debug M: "+this.mode+",Step:"+this.step+" Timer: "+this.timer, 10, 45);     // Alter BattleDebug (Timer für Anims und co.) möchte ich bei Bedarf wieder rein, daher dieser Kommi
         this.timer +=1;
         this.updateAnims(ctx);
 
@@ -85,11 +80,9 @@ export class Battle {
     }
 
     navMoves(bool, value, mode) {
-        //console.log("Modus:"+mode);
         if (mode == "battle") {
             this.playermoves.active += value*bool+4;    // Für %-Navigation: Brilliant oder was?
             this.playermoves.active %=4;    //Nach letztem Move von vorn :)
-            //console.log(this.playermoves.active);
         }
     }
 
@@ -97,15 +90,15 @@ export class Battle {
         this.execAttack(move, this.pCreature, this.eCreature, 1, -1, 95, 30);
     }
 
-    execEnemyMoves() {  // Noch keine Energie bisher! Zusammenfassen mit execAttack und bessere Stringfn.!!!
+    execEnemyMoves() {  // Noch keine Energieprüfung bisher, Alle ANgriffe ziehen einfach nur optisch etwas Energie ab.
         this.enemyMoveNr = Math.floor(this.eCreature.moves.length*Math.random());
         console.log(this.eCreature.moves[this.enemyMoveNr]);
         this.execAttack(this.eCreature.moves[this.enemyMoveNr], this.eCreature, this.pCreature, -1.2, 1, -20, 20);
     }
 
-    // neue Fn. für beide Kreaturen:
+    // Evaluiert Attacke
     execAttack(move, caster, aim, vx, vy, xOff, yOff) {
-        let moveSpecs = LibMove.GetMove(move);  // Enthält Power, Offsets, ...
+        let moveSpecs = LibMove.GetMove(move);  // Enthält Power, Offsets, ... werden aber noch nicht alle verwendet.
         console.log(moveSpecs);
         let dmg = this.calcDmg(move, caster, aim);
         this.dmgTxt = this.getDmgText(dmg[0]);
@@ -117,7 +110,7 @@ export class Battle {
     }
 
     checklife (pCreature, eCreature) {
-        if (this.pCreature.stats.health <= 0) { // Spieler verliert
+        if (this.pCreature.stats.health <= 0) { // Spieler verliert -> Hier sollte dann ein GameOver kommen (temporär - langfristig natürlich nicht)!
             this.step = "Anim";
             this.nextStep = "map";
         }
@@ -128,11 +121,10 @@ export class Battle {
     }
 
     calcDmg(move, caster, aim) {
-        //Eigentlich switch move (und dann Schaden berechnen), grob:
+        //Eigentlich eigene Formulas für die Moves, grob:
         let dmg = [];
         dmg[0] = 0.5 + Math.random();   //"Crit/ Fail"
         dmg[1] = Math.round(((caster.stats.atk/aim.stats.def) +2 )*5*dmg[0]);    //dmg
-        console.log(dmg);
         return dmg;
     }
 
@@ -144,7 +136,7 @@ export class Battle {
         this.drawer.attackAnims = [];
     }
 
-    drawCombatLog(ctx, user) {
+    drawCombatLog(ctx, user) {  // verbesserbar - das ist noch die primäre Implementierung:
         if (user == "enemy") {
             this.drawer.drawString(ctx, "#000000", 5, 455, this.player.name+" used "+this.playermoves[this.playermoves.active], "left","middle", "20px monospace");
             this.drawer.drawString(ctx,"#000000", 5, 475, this.dmgTxt+" and caused "+this.dmg+" damage.", "left","middle", "14px monospace");    
