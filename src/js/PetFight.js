@@ -91,7 +91,10 @@ export class PetFight extends GameTemplate {
             if(this.detailsBinding.hasOwnProperty(type)) {
                 this.mode = this.detailsBinding[type](active);
             }
-        }    
+        } 
+        // else if (this.mode === "miniMap") {
+        //     this.map.startMiniMap();
+        // }
     }
 
     bindControls() {
@@ -163,10 +166,15 @@ export class PetFight extends GameTemplate {
             this.map.draw(ctx);
             this.MapMenu.draw(ctx);
         }
+        // else if (this.mode === "miniMap") {
+        //     this.map.draw(ctx);
+        //     this.MapMenu.draw(ctx);
+        //     this.miniMap.drawMiniMap(ctx);
+        //}
         else if (this.mode === "start") {
             this.start.draw(ctx);
         }
-        else if (this.mode == "details") {
+        else if (this.mode === "details") {
             this.details.draw(ctx);
         }
     }

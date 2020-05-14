@@ -4,7 +4,7 @@ import { BasicDrawer } from "../../src/js/BasicDrawer.js";
 export class MapMenu extends BasicDrawer{
     constructor() {
         super();
-        this.MenuPoints = ["Pet Status", "zwei", "drei", "back to map"];
+        this.MenuPoints = ["Pet Status", "Minimap", "drei", "back to map"];
         this.MenuPoints.active = 0;
     }
     start(){
@@ -22,6 +22,10 @@ export class MapMenu extends BasicDrawer{
             }
             case "Pet Status": {
                 mapUpdate[0] = "details";
+                return mapUpdate;
+            }
+            case "Minimap": {
+                mapUpdate[0] = "miniMap";
                 return mapUpdate;
             }
         }
