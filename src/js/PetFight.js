@@ -163,11 +163,6 @@ export class PetFight extends GameTemplate {
             this.map.draw(ctx);
             this.MapMenu.draw(ctx);
         }
-        // else if (this.mode === "miniMap") {
-        //     this.map.draw(ctx);
-        //     this.MapMenu.draw(ctx);
-        //     this.miniMap.drawMiniMap(ctx);
-        //}
         else if (this.mode === "start") {
             this.start.draw(ctx);
         }
