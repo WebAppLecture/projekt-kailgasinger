@@ -31,7 +31,7 @@ export class MapMenu extends BasicDrawer{
             //     mapUpdate[0] = "miniMap";
             //     return mapUpdate;
             // } <- WIP
-
+        }
     }
 
     navMenu(bool, value, mode) {
