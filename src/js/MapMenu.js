@@ -1,9 +1,11 @@
+
 import { BasicDrawer } from "../../src/js/BasicDrawer.js";
 
 export class MapMenu extends BasicDrawer{
     constructor() {
         super();
         this.MenuPoints = ["Pet Status", "Change Skin", "Minimap?", "Back to map"]; //Menüpunkte. Minimap noch nocht realisiert
+
         this.MenuPoints.active = 0;
     }
 
@@ -21,9 +23,16 @@ export class MapMenu extends BasicDrawer{
                 mapUpdate[0] = "details";
                 return mapUpdate;
             }
+
             case "Change Skin": {
                 window.open("hier Link zum Skinchanger", "_blank"); // Skinchanger einfügen
             } break;
+
+            // case "Minimap": {
+            //     mapUpdate[0] = "miniMap";
+            //     return mapUpdate;
+            // } <- WIP
+
         }
 
     }

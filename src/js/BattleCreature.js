@@ -1,8 +1,3 @@
-
-/*
-    Sprite Spiegeln!
-*/
-
 import { GameObject } from "../../vendor/gamebox/src/js/GameObject.js";
 
 
@@ -47,21 +42,19 @@ export class BattleCreature extends GameObject {
             }
         }
         else {
-            switch (this.type) {
-                case "player":
+            // switch (this.type) {    //Alter Switch vom Versuch Kreaturen zu Spiegeln, der bleibt erstmal für bessere Zeiten
+            //     case "player":
                     
-                break;
-                case "enemy":
-                    //ctx.scale(-1, 1);
-                break;
-            }
+            //     break;
+            //     case "enemy":
+
+            //     break;
+            // }
             let image = new Image();
             image.src = "../../src/images/creatures/"+this.sprite+"_"+this.type+".png";
-            /*ctx.save(); // Save the current state
-            ctx.scale(-1, 1); // Set scale to flip the image
-            this.x *=-1;*/
+
             ctx.drawImage(image, this.x, this.y, this.width, this.height);
-            //ctx.restore(); // Restore the last saved state
+
         }
     }
 

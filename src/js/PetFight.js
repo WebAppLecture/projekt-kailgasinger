@@ -28,13 +28,9 @@ export class PetFight extends GameTemplate {
             this.timer = 0;
         }
         else if (this.mode === "map") {
-            // this.map = new Map(10, 12,);
-            // this.map.start();
-            // console.log("beim Zeichnen der Map " + this.map.currentMapx) // <- Debug
         }
         else if (this.mode === "MapMenu") {
             this.MapMenu.start();
-            //console.log("jetzt ins Mapmenü")  // <- Debug
         }
         else if (this.mode === "start") {   // "New Game Mode" / egg_selection!
             this.start = new Start();
@@ -43,7 +39,7 @@ export class PetFight extends GameTemplate {
     }
 
     input(type, active) {
-        if(this.gameOver && type === "primary") {   // klassischer GameOver
+        if(this.gameOver && type === "primary") {   // klassischer GameOver noch nicht realisiert.
             this.start();   
             this.bindControls();  
         }
@@ -56,7 +52,6 @@ export class PetFight extends GameTemplate {
             if(this.startBinding.hasOwnProperty(type)) {
                 let startUpdate = this.startBinding[type](active);
                 if (typeof(startUpdate[0]) === "object") {   // Start-Story gibt zurück wenn sie fertig ist, => Gehe in CreatureDetails
-                    // console.log(startUpdate); -> Debug
                     this.pCreature = startUpdate[0];
                     this.details = new CreatureDetails(this.pCreature, startUpdate[1]);
                     this.details.setMode("egg");
@@ -96,7 +91,7 @@ export class PetFight extends GameTemplate {
             if(this.detailsBinding.hasOwnProperty(type)) {
                 this.mode = this.detailsBinding[type](active);
             }
-        }    
+        }
     }
 
     bindControls() {
@@ -171,7 +166,7 @@ export class PetFight extends GameTemplate {
         else if (this.mode === "start") {
             this.start.draw(ctx);
         }
-        else if (this.mode == "details") {
+        else if (this.mode === "details") {
             this.details.draw(ctx);
         }
     }

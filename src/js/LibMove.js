@@ -1,6 +1,7 @@
 
 export class LibMove {
 
+    // Moves haben noch keine eigenen Dmg-Formulars, die kämen aber auch hier rein.
     static GetMove (name, caster) {
         let move = [];
         switch (name) {
