@@ -4,8 +4,8 @@ import { BasicDrawer } from "../../src/js/BasicDrawer.js";
 export class MapMenu extends BasicDrawer{
     constructor() {
         super();
-        this.MenuPoints = ["Pet Status", "Change Skin", "Minimap?", "Back to map"]; //Menüpunkte. Minimap noch nocht realisiert
 
+        this.MenuPoints = ["Pet Status", "Change Skin", "Minimap?", "Back to map"]; //Menüpunkte. Minimap noch nicht realisiert
         this.MenuPoints.active = 0;
     }
 
@@ -23,7 +23,6 @@ export class MapMenu extends BasicDrawer{
                 mapUpdate[0] = "details";
                 return mapUpdate;
             }
-
             case "Change Skin": {
                 window.open("hier Link zum Skinchanger", "_blank"); // Skinchanger einfügen
             } break;
@@ -33,14 +32,14 @@ export class MapMenu extends BasicDrawer{
             //     return mapUpdate;
             // } <- WIP
 
-        }
-
     }
 
     navMenu(bool, value, mode) {
         if (mode == "MapMenu") {
+
             this.MenuPoints.active += value*bool+4;    // Für %-Navigation: analog zur Attackenauswahl im Battle.js
             this.MenuPoints.active %=4;
+
         }
     }
     drawMapMenu(ctx) {
