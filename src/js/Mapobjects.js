@@ -1,3 +1,5 @@
+// Alle Mapobjekte hier ausgelagert
+
 export class MapObject{
     constructor(color, type, name){
         this.color = color;
