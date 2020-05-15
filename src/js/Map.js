@@ -147,7 +147,18 @@ export class Map {
     draw(ctx){
         this.player.draw(ctx);
         this.drawEntities(ctx);
-        // this.drawText(ctx);
+        this.drawText(ctx);
+    }
+
+    drawText(ctx){
+        ctx.fillStyle = "rgba(87, 101, 116, 0.85)";
+        ctx.fillRect(0, 480, 400, 200);
+        ctx.fillStyle = "#000000";
+        ctx.font = "16px monospace";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Press (B) to open Menu", 200, 492);
+
     }
 
     // drawMiniMap(ctx){

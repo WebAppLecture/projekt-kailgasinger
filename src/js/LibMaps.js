@@ -1,3 +1,4 @@
+// Alle Karten hier ausgelager. Beliebig erweiterbar.
 
 export class LibMap {
 

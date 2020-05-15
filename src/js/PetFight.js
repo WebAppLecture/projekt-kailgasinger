@@ -91,10 +91,7 @@ export class PetFight extends GameTemplate {
             if(this.detailsBinding.hasOwnProperty(type)) {
                 this.mode = this.detailsBinding[type](active);
             }
-        } 
-        // else if (this.mode === "miniMap") {
-        //     this.map.startMiniMap();
-        // }
+        }
     }
 
     bindControls() {
