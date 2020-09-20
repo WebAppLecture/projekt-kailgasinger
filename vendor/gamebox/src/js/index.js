@@ -12,7 +12,7 @@ let skinStyle = document.querySelector("#skin"),
     // save files in array for css, same for colors, attributes, ....
     // use these in html
 
-window.skinChanger = new SkinChanger(skinStyle, skins, "../vendor/gamebox/src/css/");
+window.skinChanger = new SkinChanger(skinStyle, skins, "./vendor/gamebox/src/css/");
 
 document.querySelector(".next").addEventListener("click", () => skinChanger.next());
 document.querySelector(".previous").addEventListener("click", () => skinChanger.previous());
